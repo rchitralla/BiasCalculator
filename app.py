@@ -1,6 +1,7 @@
 import streamlit as st
+import plotly.express as px
 import numpy as np
-import plotly.figure_factory as ff
+import pandas as pd
 
 # Define the sections and questions
 sections = {
@@ -57,12 +58,22 @@ def main():
         lowest_score_section = min(total_scores, key=total_scores.get)
         st.write(f"### Reflect on areas where your scores are lower than others. Consider focusing on improving the **{lowest_score_section}** section.")
 
-        # Visualization
+        # Visualization using plotly.express
         st.write("### Visualizations")
         
-        # Create a distplot
-        hist_data = [np.random.normal(total_scores[section], 1, 100) for section in total_scores.keys()]
-        group_labels = list(total_scores.keys())
-        
-        fig = ff.create_distplot(hist_data, group_labels, bin_size=[.1, .25, .5])
-        fig
+        # Prepare data for visualization
+        scores_data = pd.DataFrame({
+            "Section": list(total_scores.keys()),
+            "Score": list(total_scores.values())
+        })
+
+        # Create a bar chart
+        fig = px.bar(scores_data, x="Section", y="Score", title="Self Assessment Scores by Section")
+        st.plotly_chart(fig)
+
+        # Create a pie chart
+        fig_pie = px.pie(scores_data, names="Section", values="Score", title="Distribution of Scores by Section")
+        st.plotly_chart(fig_pie)
+
+if __name__ == "__main__":
+    main()
