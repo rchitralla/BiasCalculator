@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+import numpy as np
 
 # Define the sections and questions
 sections = {
@@ -67,4 +68,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
