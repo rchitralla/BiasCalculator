@@ -72,8 +72,4 @@ def main():
         st.plotly_chart(fig)
 
         # Create a pie chart
-        fig_pie = px.pie(scores_data, names="Section", values="Score", title="Distribution of Scores by Section")
-        st.plotly_chart(fig_pie)
-
-if __name__ == "__main__":
-    main()
+        fig_pie = px.pie(scores_data, names="Section",
