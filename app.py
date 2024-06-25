@@ -1,4 +1,5 @@
 import streamlit as st
+import plotly.express as px
 
 # Define the sections and questions
 sections = {
@@ -24,7 +25,7 @@ def display_section(section_name, questions):
     st.header(section_name)
     scores = []
     for question in questions:
-        score = st.radio(question, [3, 2, 1], index=2)
+        score = st.radio(question, [3, 2, 1], index=2, key=f"{section_name}_{question}")
         scores.append(score)
     return scores
 
@@ -46,7 +47,7 @@ def main():
         scores = display_section(section_name, questions)
         total_scores[section_name] = sum(scores)
 
-    # Display the results
+    # Display the results and visualizations
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
         for section_name, score in total_scores.items():
@@ -55,7 +56,14 @@ def main():
         lowest_score_section = min(total_scores, key=total_scores.get)
         st.write(f"### Reflect on areas where your scores are lower than others. Consider focusing on improving the **{lowest_score_section}** section.")
 
+        # Visualization
+        st.write("### Visualizations")
+        scores_data = {
+            "Section": list(total_scores.keys()),
+            "Score": list(total_scores.values())
+        }
+        fig = px.bar(scores_data, x="Section", y="Score", title="Self Assessment Scores by Section")
+        st.plotly_chart(fig)
+
 if __name__ == "__main__":
     main()
-
-
