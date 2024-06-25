@@ -50,16 +50,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# In[2]:
-
-
-streamlit run app.py
-
-
-# In[ ]:
-
-
-
-
