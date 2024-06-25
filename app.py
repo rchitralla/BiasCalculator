@@ -1,6 +1,6 @@
 import streamlit as st
-import plotly.express as px
 import numpy as np
+import plotly.figure_factory as ff
 
 # Define the sections and questions
 sections = {
@@ -59,14 +59,10 @@ def main():
 
         # Visualization
         st.write("### Visualizations")
-        scores_data = {
-            "Section": list(total_scores.keys()),
-            "Score": list(total_scores.values())
-        }
-        fig = px.bar(scores_data, x="Section", y="Score", title="Self Assessment Scores by Section")
-        st.plotly_chart(fig)
-
-if __name__ == "__main__":
-    main()
-
-
+        
+        # Create a distplot
+        hist_data = [np.random.normal(total_scores[section], 1, 100) for section in total_scores.keys()]
+        group_labels = list(total_scores.keys())
+        
+        fig = ff.create_distplot(hist_data, group_labels, bin_size=[.1, .25, .5])
+        fig
