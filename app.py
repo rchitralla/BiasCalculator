@@ -84,4 +84,25 @@ def main():
         for section_name, score in total_scores.items():
             st.write(f"**{section_name}: {score}**")
 
-        lowest_score_section = min(total_scores,
+        lowest_score_section = min(total_scores, key=total_scores.get)
+        st.write(f"### Reflect on areas where your scores are lower than others. Consider focusing on improving the **{lowest_score_section}** section.")
+
+        # Visualization using plotly.express
+        st.write("### Visualizations")
+        
+        # Prepare data for visualization
+        scores_data = pd.DataFrame({
+            "Section": list(total_scores.keys()),
+            "Score": list(total_scores.values())
+        })
+
+        # Create a bar chart
+        fig = px.bar(scores_data, x="Section", y="Score", title="Self Assessment Scores by Section")
+        st.plotly_chart(fig)
+
+        # Create a pie chart
+        fig_pie = px.pie(scores_data, names="Section", values="Score", title="Distribution of Scores by Section")
+        st.plotly_chart(fig_pie)
+
+if __name__ == "__main__":
+    main()
