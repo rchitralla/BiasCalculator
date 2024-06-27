@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.express as px
 import numpy as np
 import pandas as pd
+import random
 
 # Path to the logo image
 logo_path = "Logo.png"
@@ -87,22 +88,27 @@ categories = {
     }
 }
 
-# Function to display each category and collect responses
-def display_category(category_name, types):
-    st.header(category_name)
-    scores = {}
-    for type_name, questions in types.items():
-        st.subheader(type_name)
-        scores[type_name] = []
-        for question in questions:
-            score = st.radio(question, [3, 2, 1], index=2, key=f"{category_name}_{type_name}_{question}")
-            scores[type_name].append(score)
+# Flatten the questions and add category information
+questions = []
+for category_name, types in categories.items():
+    for type_name, qs in types.items():
+        for q in qs:
+            questions.append((category_name, type_name, q))
+
+# Function to display questions and collect responses
+def display_questions(questions):
+    st.header("Self Assessment Questions")
+    scores = []
+    random.shuffle(questions)  # Shuffle the questions for each session
+    for i, (category, type_, question) in enumerate(questions):
+        score = st.radio(question, [3, 2, 1], index=2, key=f"{i}")
+        scores.append((category, type_, score))
     return scores
 
 # Main function to display the self-assessment form
 def main():
     st.image(logo_path, width=200)  # Add your logo at the top
-    st.title("Anti-Bias Self Assessment Tool")
+    st.title("Self Assessment Tool")
     st.write(
         "This tool enables you to explore your own behaviors related to bias & inclusion in the workplace. "
         "Your results are yours and yours alone -- they will not be submitted or shared in any manner unless you choose to do so."
@@ -114,17 +120,22 @@ def main():
     )
     st.write("### Rating Scale: 3 = all of the time, consistent application | 2 = some of the time, inconsistent application | 1 = Not done at all")
 
-    # Dictionary to store the total scores for each category (in-memory only, not persistent)
-    total_scores = {}
+    # Display questions and collect responses
+    scores = display_questions(questions)
 
-    # Iterate over each category and display the questions
-    for category_name, types in categories.items():
-        scores = display_category(category_name, types)
-        total_scores[category_name] = {type_name: sum(scores[type_name]) for type_name in scores}
-
-    # Display the results and visualizations
+    # Process the results and visualizations
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
+
+        # Aggregate scores by category and type
+        total_scores = {}
+        for category, type_, score in scores:
+            if category not in total_scores:
+                total_scores[category] = {}
+            if type_ not in total_scores[category]:
+                total_scores[category][type_] = 0
+            total_scores[category][type_] += score
+
         for category_name, types in total_scores.items():
             st.write(f"**{category_name}:**")
             for type_name, score in types.items():
