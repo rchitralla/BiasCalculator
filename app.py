@@ -125,9 +125,8 @@ def main():
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
         for category_name, types in total_scores.items():
-            st.write(f"**{category_name}:**")
             for type_name, score in types.items():
-                st.write(f"  - **{type_name}: {score}**")
+                st.write(f"**{category_name} - {type_name}: {score}**")
 
         # Prepare data for visualization
         flattened_scores = []
