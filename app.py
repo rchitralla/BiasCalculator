@@ -84,7 +84,7 @@ def display_section(section_name, questions):
 # Main function to display the self-assessment form
 def main():
     st.image(logo_path, width=200)  # Add your logo at the top
-    st.title("Self Assessment Tool")
+    st.title("Anti-Bias Self Assessment Tool")
     st.write(
         "This tool enables you to explore your own behaviors related to bias & inclusion in the workplace. "
         "Your results are yours and yours alone -- they will not be submitted or shared in any manner unless you choose to do so."
