@@ -117,18 +117,21 @@ def main():
 
     # Dictionary to store the total scores for each category (in-memory only, not persistent)
     total_scores = {}
+    detailed_scores = []
 
     # Iterate over each category and display the questions
     for category_name, types in categories.items():
         scores = display_category(category_name, types)
         total_scores[category_name] = {type_name: sum(scores[type_name]) for type_name in scores}
+        for type_name, questions in types.items():
+            for i, question in enumerate(questions):
+                detailed_scores.append({"Question": question, "Score": scores[type_name][i]})
 
     # Display the results and visualizations
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
-        for category_name, types in total_scores.items():
-            for type_name, score in types.items():
-                st.write(f"**{category_name} - {type_name}: {score}**")
+        for score_detail in detailed_scores:
+            st.write(f"{score_detail['Question']}: {score_detail['Score']}")
 
         # Prepare data for visualization
         flattened_scores = []
