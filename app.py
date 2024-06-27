@@ -3,6 +3,9 @@ import plotly.express as px
 import numpy as np
 import pandas as pd
 
+# Path to the logo image
+logo_path = "Logo.png"
+
 # Define the sections and questions
 sections = {
     "General": [
@@ -62,6 +65,7 @@ def display_section(section_name, questions):
 
 # Main function to display the self-assessment form
 def main():
+    st.image(logo_path, width=200)  # Add your logo at the top
     st.title("Self Assessment Tool")
     st.write(
         "Read each statement and choose a score using the rating scale provided. "
