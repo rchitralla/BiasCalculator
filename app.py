@@ -68,6 +68,10 @@ def main():
     st.image(logo_path, width=200)  # Add your logo at the top
     st.title("Self Assessment Tool")
     st.write(
+        "This tool enables you to explore your own behaviors related to bias & inclusion in the workplace. "
+        "Your results are yours and yours alone -- they will not be submitted or shared in any manner unless you choose to do so."
+    )
+    st.write(
         "Read each statement and choose a score using the rating scale provided. "
         "Once complete, subtotal the scores by section. Reflect on areas where your scores are lower than others and identify where you can continue to grow. "
         "The assessment should take you no longer than 5 – 10 mins."
