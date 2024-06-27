@@ -6,19 +6,48 @@ import pandas as pd
 # Define the sections and questions
 sections = {
     "General": [
-        "I set clear goals for my team.",
-        "I communicate effectively with team members.",
-        "I provide regular feedback to my team."
+        "I speak up when team members say things based on stereotypes or assumptions.",
+        "I build strong partnerships with communities and organizations supporting historically marginalized groups.",
+        "I give equal attention to people from all backgrounds.",
+        "I value dissenting opinions, even when they make me uncomfortable.",
+        "I examine my connections and diversify the perspectives and experiences around me.",
+        "I consider multiple data sources and avoid relying on 'gut reaction' for decisions.",
+        "I encourage my team to speak up against stereotypes or assumptions.",
+        "I promote the sharing of dissenting opinions across the team.",
+        "I seek insights from Employee Resource Groups to improve my function/team/department.",
+        "I support reviewing policies across all functions to ensure they are inclusive and free from bias.",
+        "I support formal mentoring and sponsorship programs in my organization.",
+        "I hold my team accountable for mentoring and sponsoring marginalized employees, including in performance reviews.",
+        "I support ongoing inclusion/unconscious bias training for all employees.",
+        "I regularly review and address bias/equity in pay decisions.",
+        "I support the systemic review of pay equity and performance ratings by demographic annually.",
+        "During performance reviews, I check ratings distributions by demographic for potential bias.",
+        "I support publicly sharing pay equity results and plans to address gaps.",
+        "I personally speak to critical employees from all backgrounds to understand their exit and stay reasons.",
+        "My function conducts regular exit interviews.",
+        "My function takes actions to improve retention of people from all backgrounds."
     ],
     "Recruiting & Hiring": [
-        "I have a clear recruitment strategy.",
-        "I conduct thorough interviews.",
-        "I ensure new hires are onboarded effectively."
+        "I review the team for diversity when starting a project and take action if it's not diverse.",
+        "I wait to decide on hiring until there is a balanced slate of candidates.",
+        "I use structured interview guides and consistent criteria for all candidates.",
+        "I use structured guides and consistent criteria for all interviews.",
+        "My function has a balanced slate policy.",
+        "My function requires structured interviews or diverse panels for all roles.",
+        "Every new team member takes inclusion/unconscious bias training when starting.",
+        "My function includes inclusion/unconscious bias training in new hire onboarding."
     ],
     "Culture & Engagement": [
-        "I foster a positive work environment.",
-        "I recognize and reward team achievements.",
-        "I encourage open communication."
+        "I use language carefully to avoid terms that may be degrading or hurtful.",
+        "I sponsor and mentor employees from historically marginalized groups.",
+        "I mentor and sponsor people from marginalized groups within and outside my organization.",
+        "I monitor training participation to ensure inclusion of all backgrounds.",
+        "I create individual development plans for every team member.",
+        "I support the systemic review of pay equity and performance ratings by demographic annually.",
+        "During performance reviews, I check ratings distributions by demographic for potential bias.",
+        "I personally speak to critical employees from all backgrounds to understand their exit and stay reasons.",
+        "My function conducts regular exit interviews.",
+        "My function takes actions to improve retention of people from all backgrounds."
     ]
 }
 
@@ -55,25 +84,4 @@ def main():
         for section_name, score in total_scores.items():
             st.write(f"**{section_name}: {score}**")
 
-        lowest_score_section = min(total_scores, key=total_scores.get)
-        st.write(f"### Reflect on areas where your scores are lower than others. Consider focusing on improving the **{lowest_score_section}** section.")
-
-        # Visualization using plotly.express
-        st.write("### Visualizations")
-        
-        # Prepare data for visualization
-        scores_data = pd.DataFrame({
-            "Section": list(total_scores.keys()),
-            "Score": list(total_scores.values())
-        })
-
-        # Create a bar chart
-        fig = px.bar(scores_data, x="Section", y="Score", title="Self Assessment Scores by Section")
-        st.plotly_chart(fig)
-
-        # Create a pie chart
-        fig_pie = px.pie(scores_data, names="Section", values="Score", title="Distribution of Scores by Section")
-        st.plotly_chart(fig_pie)
-
-if __name__ == "__main__":
-    main()
+        lowest_score_section = min(total_scores,
