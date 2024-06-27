@@ -105,11 +105,13 @@ def main():
         })
 
         # Create a bar chart
-        fig = px.bar(scores_data, x="Section", y="Score", title="Self Assessment Scores by Section")
+        fig = px.bar(scores_data, x="Section", y="Score", title="Self Assessment Scores by Section",
+                     color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
         st.plotly_chart(fig)
 
         # Create a pie chart
-        fig_pie = px.pie(scores_data, names="Section", values="Score", title="Distribution of Scores by Section")
+        fig_pie = px.pie(scores_data, names="Section", values="Score", title="Distribution of Scores by Section",
+                         color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
         st.plotly_chart(fig_pie)
 
 if __name__ == "__main__":
