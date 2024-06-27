@@ -1,6 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
+import random
 
 # Path to the logo image
 logo_path = "Logo.png"
@@ -92,6 +93,7 @@ def display_category(category_name, types):
     scores = {}
     for type_name, questions in types.items():
         st.subheader(type_name)
+        random.shuffle(questions)  # Randomize the order of questions
         scores[type_name] = []
         for question in questions:
             score = st.radio(question, [1, 2, 3, 4, 5], index=2, key=f"{category_name}_{type_name}_{question}")
