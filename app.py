@@ -2,27 +2,9 @@ import streamlit as st
 import plotly.express as px
 import numpy as np
 import pandas as pd
-import os
 
 # Path to the logo image
 logo_path = "Logo.png"
-
-# Path to the usage count file
-count_file_path = "usage_count.txt"
-
-# Function to read the current usage count
-def read_usage_count(file_path):
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            count = int(file.read())
-    else:
-        count = 0
-    return count
-
-# Function to write the updated usage count
-def write_usage_count(file_path, count):
-    with open(file_path, 'w') as file:
-        file.write(str(count))
 
 # Define the categories, types, and questions
 categories = {
@@ -142,11 +124,6 @@ def main():
 
     # Display the results and visualizations
     if st.button("Submit"):
-        # Increment the usage count
-        usage_count = read_usage_count(count_file_path)
-        usage_count += 1
-        write_usage_count(count_file_path, usage_count)
-
         st.write("## Assessment Complete. Here are your results:")
         for category_name, types in total_scores.items():
             st.write(f"**{category_name}:**")
@@ -164,8 +141,6 @@ def main():
         fig = px.bar(scores_data, x="Category", y="Score", color="Type", title="Self Assessment Scores by Category and Type",
                      color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
         st.plotly_chart(fig)
-
-        st.write(f"### This tool has been used {usage_count} times.")
 
 if __name__ == "__main__":
     main()
