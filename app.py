@@ -136,6 +136,9 @@ def main():
                 flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score})
         scores_data = pd.DataFrame(flattened_scores)
 
+        # Sort data by Score in descending order
+        scores_data = scores_data.sort_values(by="Score", ascending=False)
+
         # Create a bar chart
         fig = px.bar(scores_data, x="Category", y="Score", color="Type", title="Self Assessment Scores by Category and Type",
                      color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
