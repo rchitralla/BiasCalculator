@@ -105,23 +105,11 @@ def display_questions():
         st.write(item["question"])
         options = [None, 1, 2, 3, 4, 5]  # Add None as the default option
         selected_option = st.session_state.get(f"{item['category']}_{item['type']}_{item['question']}", None)
-        
-        col1, col2, col3, col4, col5 = st.columns(5)
-        with col1:
-            if col1.radio("", ["1"], key=f"{item['category']}_{item['type']}_{item['question']}_1", index=0 if selected_option is None else selected_option):
-                selected_option = 1
-        with col2:
-            if col2.radio("", ["2"], key=f"{item['category']}_{item['type']}_{item['question']}_2", index=0 if selected_option is None else selected_option):
-                selected_option = 2
-        with col3:
-            if col3.radio("", ["3"], key=f"{item['category']}_{item['type']}_{item['question']}_3", index=0 if selected_option is None else selected_option):
-                selected_option = 3
-        with col4:
-            if col4.radio("", ["4"], key=f"{item['category']}_{item['type']}_{item['question']}_4", index=0 if selected_option is None else selected_option):
-                selected_option = 4
-        with col5:
-            if col5.radio("", ["5"], key=f"{item['category']}_{item['type']}_{item['question']}_5", index=0 if selected_option is None else selected_option):
-                selected_option = 5
+
+        selected_option = st.selectbox(
+            "", options, index=0 if selected_option is None else options.index(selected_option),
+            key=f"{item['category']}_{item['type']}_{item['question']}"
+        )
 
         st.session_state[f"{item['category']}_{item['type']}_{item['question']}"] = selected_option
         responses.append({
