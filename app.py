@@ -103,13 +103,25 @@ def display_questions():
     responses = []
     for item in st.session_state['shuffled_questions']:
         st.write(item["question"])
-        cols = st.columns(5)
         options = ["1", "2", "3", "4", "5"]
         selected_option = st.session_state.get(f"{item['category']}_{item['type']}_{item['question']}", "3")
-        for i, col in enumerate(cols):
-            with col:
-                if st.radio("", options, index=int(selected_option) - 1, key=f"{item['category']}_{item['type']}_{item['question']}_{options[i]}"):
-                    selected_option = options[i]
+        col1, col2, col3, col4, col5 = st.columns(5)
+        with col1:
+            if col1.radio("", options[:1], key=f"{item['category']}_{item['type']}_{item['question']}_1"):
+                selected_option = "1"
+        with col2:
+            if col2.radio("", options[1:2], key=f"{item['category']}_{item['type']}_{item['question']}_2"):
+                selected_option = "2"
+        with col3:
+            if col3.radio("", options[2:3], key=f"{item['category']}_{item['type']}_{item['question']}_3"):
+                selected_option = "3"
+        with col4:
+            if col4.radio("", options[3:4], key=f"{item['category']}_{item['type']}_{item['question']}_4"):
+                selected_option = "4"
+        with col5:
+            if col5.radio("", options[4:5], key=f"{item['category']}_{item['type']}_{item['question']}_5"):
+                selected_option = "5"
+
         st.session_state[f"{item['category']}_{item['type']}_{item['question']}"] = selected_option
         responses.append({
             "category": item["category"],
