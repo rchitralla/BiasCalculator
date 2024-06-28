@@ -112,6 +112,11 @@ def display_questions():
         })
     return responses
 
+# Function to calculate the total score
+def calculate_total_score(responses):
+    total_score = sum(response['score'] for response in responses)
+    return total_score
+
 # Main function to display the self-assessment form
 def main():
     st.image(logo_path, width=200)  # Add your logo at the top
@@ -142,6 +147,9 @@ def main():
             total_scores[category][type_] = 0
         total_scores[category][type_] += score
 
+    # Calculate the total score
+    total_score = calculate_total_score(responses)
+
     # Display the results and visualizations
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
@@ -150,6 +158,9 @@ def main():
         for category_name, types in total_scores.items():
             for type_name, score in types.items():
                 st.write(f"**{category_name} - {type_name}: {score}**")
+
+        # Display total score
+        st.write(f"### Total Score: {total_score}")
 
         # Prepare data for visualization
         flattened_scores = []
