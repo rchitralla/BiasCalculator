@@ -182,15 +182,22 @@ def main():
 
         # Prepare data for visualization
         flattened_scores = []
-        for category_name, score in total_scores_per_category.items():
-            flattened_scores.append({"Category": category_name, "Score": score})
+        for category_name, types in total_scores.items():
+            for type_name, score in types.items():
+                flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score})
         scores_data = pd.DataFrame(flattened_scores)
 
-        # Sort data by Score in descending order for bar chart
-        scores_data = scores_data.sort_values(by="Score", ascending=False)
+        # Calculate total scores per category for sorting
+        total_scores_list = [{"Category": category_name, "Total Score": score} for category_name, score in total_scores_per_category.items()]
+        total_scores_df = pd.DataFrame(total_scores_list).sort_values(by="Total Score", ascending=False)
+
+        # Sort the scores_data based on the ordered categories
+        ordered_categories = total_scores_df["Category"].tolist()
+        scores_data["Category"] = pd.Categorical(scores_data["Category"], categories=ordered_categories, ordered=True)
+        scores_data = scores_data.sort_values(by=["Category", "Score"], ascending=[True, False])
 
         # Create a bar chart
-        fig_bar = px.bar(scores_data, x="Category", y="Score", title="Total Scores by Category",
+        fig_bar = px.bar(scores_data, x="Category", y="Score", color="Type", title="Self Assessment Scores by Category and Type",
                          color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
         st.plotly_chart(fig_bar)
 
