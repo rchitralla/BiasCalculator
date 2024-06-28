@@ -116,6 +116,13 @@ def calculate_total_score(responses):
     total_score = sum(response['score'] for response in responses)
     return total_score
 
+# Function to calculate the total score per category
+def calculate_total_scores_per_category(total_scores):
+    total_scores_per_category = {}
+    for category_name, types in total_scores.items():
+        total_scores_per_category[category_name] = sum(types.values())
+    return total_scores_per_category
+
 # Main function to display the self-assessment form
 def main():
     st.image(logo_path, width=200)  # Add your logo at the top
@@ -154,6 +161,9 @@ def main():
     # Calculate the total score
     total_score = calculate_total_score(responses)
 
+    # Calculate the total scores per category
+    total_scores_per_category = calculate_total_scores_per_category(total_scores)
+
     # Display the results and visualizations
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
@@ -166,18 +176,21 @@ def main():
         # Display total score
         st.write(f"### Total Score: {total_score}")
 
+        # Display total scores per category
+        for category_name, score in total_scores_per_category.items():
+            st.write(f"**{category_name}: {score}**")
+
         # Prepare data for visualization
         flattened_scores = []
-        for category_name, types in total_scores.items():
-            for type_name, score in types.items():
-                flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score})
+        for category_name, score in total_scores_per_category.items():
+            flattened_scores.append({"Category": category_name, "Score": score})
         scores_data = pd.DataFrame(flattened_scores)
 
         # Sort data by Score in descending order for bar chart
-        scores_data_bar = scores_data.sort_values(by="Score", ascending=False)
+        scores_data = scores_data.sort_values(by="Score", ascending=False)
 
         # Create a bar chart
-        fig_bar = px.bar(scores_data_bar, x="Category", y="Score", color="Type", title="Self Assessment Scores by Category and Type",
+        fig_bar = px.bar(scores_data, x="Category", y="Score", title="Total Scores by Category",
                          color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
         st.plotly_chart(fig_bar)
 
