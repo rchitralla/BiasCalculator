@@ -108,13 +108,14 @@ def display_questions():
         selected_option = st.session_state.get(f"{item['category']}_{item['type']}_{item['question']}", "3")
         for i, col in enumerate(cols):
             with col:
-                st.session_state[f"{item['category']}_{item['type']}_{item['question']}"] = col.radio(
-                    "", options, index=int(selected_option) - 1, key=f"{item['category']}_{item['type']}_{item['question']}_{options[i]}")
+                if st.radio("", options, index=int(selected_option) - 1, key=f"{item['category']}_{item['type']}_{item['question']}_{options[i]}"):
+                    selected_option = options[i]
+        st.session_state[f"{item['category']}_{item['type']}_{item['question']}"] = selected_option
         responses.append({
             "category": item["category"],
             "type": item["type"],
             "question": item["question"],
-            "score": int(st.session_state[f"{item['category']}_{item['type']}_{item['question']}"])
+            "score": int(selected_option)
         })
     return responses
 
