@@ -213,4 +213,4 @@ def main():
         st.plotly_chart(fig_doughnut)
 
 if __name__ == "__main__":
-    main
+    main()
