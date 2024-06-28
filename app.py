@@ -100,9 +100,8 @@ for category_name, types in categories.items():
 
 # Function to display questions and collect responses
 def display_questions():
-    random.shuffle(questions_list)  # Randomize the order of questions
     responses = []
-    for item in questions_list:
+    for item in st.session_state['shuffled_questions']:
         score = st.radio(item["question"], [1, 2, 3, 4, 5], index=2, key=f"{item['category']}_{item['type']}_{item['question']}")
         responses.append({
             "category": item["category"],
@@ -131,6 +130,11 @@ def main():
         "The assessment should take you no longer than 5 – 10 mins."
     )
     st.write("### Rating Scale: 1 = Never | 2 = Rarely | 3 = Sometimes | 4 = Often | 5 = Consistently all the time")
+
+    # Shuffle questions once per session
+    if 'shuffled_questions' not in st.session_state:
+        st.session_state['shuffled_questions'] = questions_list.copy()
+        random.shuffle(st.session_state['shuffled_questions'])
 
     # Display the questions and collect responses
     responses = display_questions()
