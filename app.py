@@ -103,17 +103,13 @@ def display_questions():
     responses = []
     for item in st.session_state['shuffled_questions']:
         st.write(item["question"])
-        cols = st.columns(5)
-        score = st.session_state.get(f"{item['category']}_{item['type']}_{item['question']}", None)
-        for i, col in enumerate(cols):
-            if col.radio("", [i+1], index=0 if score is None else score-1, key=f"{item['category']}_{item['type']}_{item['question']}_{i+1}"):
-                score = i + 1
-                st.session_state[f"{item['category']}_{item['type']}_{item['question']}"] = score
+        options = [1, 2, 3, 4, 5]
+        selected_option = st.radio("", options, key=f"{item['category']}_{item['type']}_{item['question']}")
         responses.append({
             "category": item["category"],
             "type": item["type"],
             "question": item["question"],
-            "score": score
+            "score": selected_option
         })
     return responses
 
@@ -214,6 +210,22 @@ def main():
         fig_doughnut = px.pie(scores_data, names='Category', values='Score', title='Score Distribution by Category',
                               hole=0.4, color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
         st.plotly_chart(fig_doughnut)
+
+# Add CSS to style radio buttons horizontally
+st.markdown(
+    """
+    <style>
+    div[data-baseweb="radio"] > div {
+        display: flex;
+        flex-direction: row;
+    }
+    div[data-baseweb="radio"] label {
+        margin-right: 10px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 if __name__ == "__main__":
     main()
