@@ -197,7 +197,8 @@ def main():
         flattened_scores = []
         for category_name, types in categories.items():
             for type_name, questions in types.items():
-                score = sum([response['score'] for response in responses if response['category'] == category_name and response['type'] == type_name])
+                response_scores = [response['score'] for response in responses if (response['category'] == category_name) and (response['type'] == type_name) and (type(response['score']) == int)]
+                score = sum(response_scores)
                 flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score})
         scores_data = pd.DataFrame(flattened_scores)
 
