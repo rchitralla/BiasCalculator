@@ -123,6 +123,14 @@ def calculate_total_scores_per_category(total_scores):
         total_scores_per_category[category_name] = sum(types.values())
     return total_scores_per_category
 
+# Function to calculate the maximum possible score per category
+def calculate_max_scores_per_category(categories):
+    max_scores_per_category = {}
+    for category_name, types in categories.items():
+        total_questions = sum(len(questions) for questions in types.values())
+        max_scores_per_category[category_name] = total_questions * 5  # Maximum score is 5 per question
+    return max_scores_per_category
+
 # Main function to display the self-assessment form
 def main():
     st.image(logo_path, width=200)  # Add your logo at the top
@@ -164,6 +172,9 @@ def main():
     # Calculate the total scores per category
     total_scores_per_category = calculate_total_scores_per_category(total_scores)
 
+    # Calculate the maximum possible scores per category
+    max_scores_per_category = calculate_max_scores_per_category(categories)
+
     # Display the results and visualizations
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
@@ -178,7 +189,7 @@ def main():
 
         # Display total scores per category
         for category_name, score in total_scores_per_category.items():
-            st.write(f"**{category_name}: {score}**")
+            st.write(f"**{category_name}: {score} out of {max_scores_per_category[category_name]}**")
 
         # Prepare data for visualization
         flattened_scores = []
@@ -188,7 +199,7 @@ def main():
         scores_data = pd.DataFrame(flattened_scores)
 
         # Calculate total scores per category for sorting
-        total_scores_list = [{"Category": category_name, "Total Score": score} for category_name, score in total_scores_per_category.items()]
+        total_scores_list = [{"Category": category_name, "Total Score": score, "Max Score": max_scores_per_category[category_name]} for category_name, score in total_scores_per_category.items()]
         total_scores_df = pd.DataFrame(total_scores_list).sort_values(by="Total Score", ascending=False)
 
         # Sort the scores_data based on the ordered categories
@@ -203,9 +214,4 @@ def main():
 
         # Create a doughnut chart
         fig_doughnut = px.pie(scores_data, names='Category', values='Score', title='Score Distribution by Category',
-                              hole=0.4, color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
-        fig_doughnut.update_traces(textposition='inside', textinfo='percent+label')
-        st.plotly_chart(fig_doughnut)
-
-if __name__ == "__main__":
-    main()
+                              hole=0.
