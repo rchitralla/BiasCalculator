@@ -104,7 +104,7 @@ def display_questions():
     for item in st.session_state['shuffled_questions']:
         st.write(item["question"])
         options = ["1", "2", "3", "4", "5"]
-        selected_option = st.radio("", options, index=2, key=f"{item['category']}_{item['type']}_{item['question']}")
+        selected_option = st.radio("", options, index=2, key=f"{item['category']}_{item['type']}_{item['question']}", horizontal=True)
         responses.append({
             "category": item["category"],
             "type": item["type"],
@@ -210,22 +210,6 @@ def main():
         fig_doughnut = px.pie(scores_data, names='Category', values='Score', title='Score Distribution by Category',
                               hole=0.4, color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
         st.plotly_chart(fig_doughnut)
-
-# Add CSS to style radio buttons horizontally
-st.markdown(
-    """
-    <style>
-    div[data-baseweb="radio"] > div {
-        display: flex;
-        flex-direction: row;
-    }
-    div[data-baseweb="radio"] label {
-        margin-right: 10px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 if __name__ == "__main__":
     main()
