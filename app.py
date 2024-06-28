@@ -104,14 +104,16 @@ def display_questions():
     for item in st.session_state['shuffled_questions']:
         st.write(item["question"])
         options = [None, 1, 2, 3, 4, 5]  # Add None as the default option
-        selected_option = st.session_state.get(f"{item['category']}_{item['type']}_{item['question']}", None)
+        key = f"{item['category']}_{item['type']}_{item['question']}"
+
+        if key not in st.session_state:
+            st.session_state[key] = None
 
         selected_option = st.selectbox(
-            "Select your response:", options, index=options.index(selected_option) if selected_option in options else 0,
-            key=f"{item['category']}_{item['type']}_{item['question']}"
+            "Select your response:", options, index=options.index(st.session_state[key]) if st.session_state[key] in options else 0,
+            key=key
         )
 
-        st.session_state[f"{item['category']}_{item['type']}_{item['question']}"] = selected_option
         responses.append({
             "category": item["category"],
             "type": item["type"],
