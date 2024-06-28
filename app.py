@@ -147,4 +147,72 @@ def main():
     st.write("### Rating Scale: 1 = Never | 2 = Rarely | 3 = Sometimes | 4 = Often | 5 = Consistently all the time")
 
     # Shuffle questions once per session
-    if 'shuffled_
+    if 'shuffled_questions' not in st.session_state:
+        st.session_state['shuffled_questions'] = questions_list.copy()
+        random.shuffle(st.session_state['shuffled_questions'])
+
+    # Display the questions and collect responses
+    responses = display_questions()
+
+    # Group responses by category and type for analytics
+    total_scores = {}
+    for response in responses:
+        category = response["category"]
+        type_ = response["type"]
+        score = response["score"]
+        if category not in total_scores:
+            total_scores[category] = {}
+        if type_ not in total_scores[category]:
+            total_scores[category][type_] = 0
+        total_scores[category][type_] += score
+
+    # Calculate the total score
+    total_score = calculate_total_score(responses)
+
+    # Calculate the total scores per category
+    total_scores_per_category = calculate_total_scores_per_category(total_scores)
+
+    # Calculate the maximum possible scores per category
+    max_scores_per_category = calculate_max_scores_per_category(categories)
+
+    # Display the results and visualizations
+    if st.button("Submit"):
+        st.write("## Assessment Complete. Here are your results:")
+
+        # Display grouped results
+        for category_name, types in total_scores.items():
+            for type_name, score in types.items():
+                st.write(f"**{category_name} - {type_name}: {score}**")
+
+        # Display total score
+        st.write(f"### Total Score: {total_score}")
+
+        # Display total scores per category
+        for category_name, score in total_scores_per_category.items():
+            st.write(f"**{category_name}: {score} out of {max_scores_per_category[category_name]}**")
+
+        # Prepare data for visualization
+        flattened_scores = []
+        for category_name, types in total_scores.items():
+            for type_name, score in types.items():
+                flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score})
+        scores_data = pd.DataFrame(flattened_scores)
+
+        # Calculate total scores per category for sorting
+        total_scores_list = [{"Category": category_name, "Total Score": score, "Max Score": max_scores_per_category[category_name]} for category_name, score in total_scores_per_category.items()]
+        total_scores_df = pd.DataFrame(total_scores_list).sort_values(by="Total Score", ascending=False)
+
+        # Sort the scores_data based on the ordered categories
+        ordered_categories = total_scores_df["Category"].tolist()
+        scores_data["Category"] = pd.Categorical(scores_data["Category"], categories=ordered_categories, ordered=True)
+        scores_data = scores_data.sort_values(by=["Category", "Score"], ascending=[True, False])
+
+        # Create a bar chart
+        fig_bar = px.bar(scores_data, x="Category", y="Score", color="Type", title="Self Assessment Scores by Category and Type",
+                         color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
+        st.plotly_chart(fig_bar)
+
+        # Create a doughnut chart
+        fig_doughnut = px.pie(scores_data, names='Category', values='Score', title='Score Distribution by Category',
+                              hole=0.4, color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
+        fig_doughnut.update_tr
