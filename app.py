@@ -103,12 +103,13 @@ def display_questions():
     responses = []
     for item in st.session_state['shuffled_questions']:
         st.write(item["question"])
-        cols = st.columns(5)
+        cols = st.columns([1, 1, 1, 1, 1])
         options = ["1", "2", "3", "4", "5"]
         selected_option = st.session_state.get(f"{item['category']}_{item['type']}_{item['question']}", "3")
         for i, col in enumerate(cols):
-            if col.radio("", [options[i]], index=0 if selected_option == options[i] else -1, key=f"{item['category']}_{item['type']}_{item['question']}_{options[i]}"):
-                selected_option = options[i]
+            with col:
+                if st.radio("", [options[i]], index=0 if selected_option == options[i] else -1, key=f"{item['category']}_{item['type']}_{item['question']}_{options[i]}"):
+                    selected_option = options[i]
         st.session_state[f"{item['category']}_{item['type']}_{item['question']}"] = selected_option
         responses.append({
             "category": item["category"],
