@@ -215,4 +215,4 @@ def main():
         # Create a doughnut chart
         fig_doughnut = px.pie(scores_data, names='Category', values='Score', title='Score Distribution by Category',
                               hole=0.4, color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
-        fig_doughnut.update_traces(textposition='inside', textinfo='percent+label
+        fig_d
