@@ -103,7 +103,7 @@ def display_questions():
     responses = []
     for item in st.session_state['shuffled_questions']:
         st.write(item["question"])
-        score = st.radio("", [1, 2, 3, 4, 5], index=-1, key=f"{item['category']}_{item['type']}_{item['question']}")
+        score = st.radio("", [1, 2, 3, 4, 5], key=f"{item['category']}_{item['type']}_{item['question']}")
         responses.append({
             "category": item["category"],
             "type": item["type"],
