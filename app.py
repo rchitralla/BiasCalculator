@@ -107,7 +107,7 @@ def display_questions():
         cols = st.columns(5)
         selected_option = st.session_state.get(f"{item['category']}_{item['type']}_{item['question']}", None)
         for i, col in enumerate(cols):
-            if col.radio("", options, index=options.index(selected_option) if selected_option is not None else None, key=f"{item['category']}_{item['type']}_{item['question']}_{i}"):
+            if col.radio("", [options[i]], index=0 if selected_option == options[i] else None, key=f"{item['category']}_{item['type']}_{item['question']}_{i}"):
                 st.session_state[f"{item['category']}_{item['type']}_{item['question']}"] = options[i]
                 selected_option = options[i]
         responses.append({
