@@ -102,10 +102,12 @@ for category_name, types in categories.items():
 def display_questions():
     responses = []
     for item in st.session_state['shuffled_questions']:
-        score = st.radio(
-            item["question"], [1, 2, 3, 4, 5], index=2, key=f"{item['category']}_{item['type']}_{item['question']}",
-            horizontal=True  # Set horizontal to True
-        )
+        st.write(item["question"])
+        cols = st.columns(5)
+        score = None
+        for i, col in enumerate(cols):
+            if col.radio("", [1, 2, 3, 4, 5], index=i, key=f"{item['category']}_{item['type']}_{item['question']}_{i}"):
+                score = i + 1
         responses.append({
             "category": item["category"],
             "type": item["type"],
