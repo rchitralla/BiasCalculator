@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 import random
 
@@ -177,9 +178,15 @@ def main():
         scores_data = scores_data.sort_values(by="Score", ascending=False)
 
         # Create a bar chart
-        fig = px.bar(scores_data, x="Category", y="Score", color="Type", title="Self Assessment Scores by Category and Type",
-                     color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
-        st.plotly_chart(fig)
+        fig_bar = px.bar(scores_data, x="Category", y="Score", color="Type", title="Self Assessment Scores by Category and Type",
+                         color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
+        st.plotly_chart(fig_bar)
+
+        # Create a doughnut chart
+        fig_doughnut = px.pie(scores_data, names='Category', values='Score', title='Score Distribution by Category',
+                              hole=0.4, color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
+        fig_doughnut.update_traces(textposition='inside', textinfo='percent+label')
+        st.plotly_chart(fig_doughnut)
 
 if __name__ == "__main__":
     main()
