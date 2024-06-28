@@ -182,8 +182,9 @@ def main():
 
         # Prepare data for visualization
         flattened_scores = []
-        for category_name, types in total_scores.items():
-            for type_name, score in types.items():
+        for category_name, types in categories.items():
+            for type_name, questions in types.items():
+                score = sum([response['score'] for response in responses if response['category'] == category_name and response['type'] == type_name])
                 flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score})
         scores_data = pd.DataFrame(flattened_scores)
 
