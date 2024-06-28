@@ -87,18 +87,30 @@ categories = {
     }
 }
 
-# Function to display each category and collect responses
-def display_category(category_name, types):
-    st.header(category_name)
-    scores = {}
+# Flattened list of questions to display without headers
+questions_list = []
+for category_name, types in categories.items():
     for type_name, questions in types.items():
-        st.subheader(type_name)
-        random.shuffle(questions)  # Randomize the order of questions
-        scores[type_name] = []
         for question in questions:
-            score = st.radio(question, [1, 2, 3, 4, 5], index=2, key=f"{category_name}_{type_name}_{question}")
-            scores[type_name].append(score)
-    return scores
+            questions_list.append({
+                "category": category_name,
+                "type": type_name,
+                "question": question
+            })
+
+# Function to display questions and collect responses
+def display_questions():
+    random.shuffle(questions_list)  # Randomize the order of questions
+    responses = []
+    for item in questions_list:
+        score = st.radio(item["question"], [1, 2, 3, 4, 5], index=2, key=f"{item['category']}_{item['type']}_{item['question']}")
+        responses.append({
+            "category": item["category"],
+            "type": item["type"],
+            "question": item["question"],
+            "score": score
+        })
+    return responses
 
 # Main function to display the self-assessment form
 def main():
@@ -115,22 +127,29 @@ def main():
     )
     st.write("### Rating Scale: 1 = Never | 2 = Rarely | 3 = Sometimes | 4 = Often | 5 = Consistently all the time")
 
-    # Dictionary to store the total scores for each category (in-memory only, not persistent)
-    total_scores = {}
+    # Display the questions and collect responses
+    responses = display_questions()
 
-    # Iterate over each category and display the questions
-    for category_name, types in categories.items():
-        scores = display_category(category_name, types)
-        total_scores[category_name] = {type_name: sum(scores[type_name]) for type_name in scores}
+    # Group responses by category and type for analytics
+    total_scores = {}
+    for response in responses:
+        category = response["category"]
+        type_ = response["type"]
+        score = response["score"]
+        if category not in total_scores:
+            total_scores[category] = {}
+        if type_ not in total_scores[category]:
+            total_scores[category][type_] = 0
+        total_scores[category][type_] += score
 
     # Display the results and visualizations
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
-        for category_name, types in categories.items():
-            for type_name, questions in types.items():
-                st.write(f"**{category_name} - {type_name}:**")
-                for i, question in enumerate(questions):
-                    st.write(f"{question}: {total_scores[category_name][type_name]}")
+
+        # Display grouped results
+        for category_name, types in total_scores.items():
+            for type_name, score in types.items():
+                st.write(f"**{category_name} - {type_name}: {score}**")
 
         # Prepare data for visualization
         flattened_scores = []
