@@ -107,7 +107,7 @@ def display_questions():
         selected_option = st.session_state.get(f"{item['category']}_{item['type']}_{item['question']}", None)
 
         selected_option = st.selectbox(
-            "", options, index=0 if selected_option is None else options.index(selected_option),
+            "Select your response:", options, index=options.index(selected_option) if selected_option in options else 0,
             key=f"{item['category']}_{item['type']}_{item['question']}"
         )
 
