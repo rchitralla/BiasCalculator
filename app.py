@@ -158,7 +158,7 @@ def main():
     )
     st.write(
         "Read each statement and choose a score using the rating scale provided. "
-        "Once complete, subtotal the scores by section. Reflect on areas where your scores are lower than others and identify where you can continue to grow. "
+        "Once complete, the tool subtotals the scores by section. Reflect on areas where your scores are lower than others and identify where you can continue to grow. "
         "The assessment should take you no longer than 5 – 10 mins."
     )
     st.write("### Rating Scale: 1 = Never | 2 = Rarely | 3 = Sometimes | 4 = Often | 5 = Consistently all the time")
