@@ -212,7 +212,7 @@ def main():
 
         # Calculate total scores per category for sorting
         total_scores_list = [{"Category": category_name, "Total Score": score, "Max Score": max_scores_per_category[category_name]} for category_name, score in total_scores_per_category.items()]
-        total_scores_df = pd.DataFrame(total_scores_list).sort_values(by "Total Score", ascending=False)
+        total_scores_df = pd.DataFrame(total_scores_list).sort_values(by="Total Score", ascending=False)
 
         # Sort the scores_data based on the ordered categories
         ordered_categories = total_scores_df["Category"].tolist()
