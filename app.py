@@ -170,13 +170,15 @@ def custom_progress_bar(percentage, color="#377bff"):
     )
 
 # Function to create custom horizontal bar chart
-def custom_horizontal_bar_chart(total_scores_df):
-    max_score = max(total_scores_df["Max Score"])
-    st.markdown("<h3>Total Scores by Category</h3>", unsafe_allow_html=True)
-    for index, row in total_scores_df.iterrows():
-        percentage = (row["Total Score"] / row["Max Score"]) * 100
-        custom_progress_bar(percentage, color="#377bff")
-        st.markdown(f"**{row['Category']}**: {row['Total Score']} out of {row['Max Score']} ({percentage:.2f}%)", unsafe_allow_html=True)
+def custom_horizontal_bar_chart(scores_data):
+    st.markdown("<h3>Self Assessment Scores by Category and Type</h3>", unsafe_allow_html=True)
+    for category in scores_data["Category"].unique():
+        st.markdown(f"### {category}", unsafe_allow_html=True)
+        category_data = scores_data[scores_data["Category"] == category]
+        for _, row in category_data.iterrows():
+            percentage = row["Percentage"]
+            custom_progress_bar(percentage, color="#377bff")
+            st.markdown(f"**{row['Type']}**: {row['Score']} ({percentage:.2f}%)", unsafe_allow_html=True)
 
 # Main function to display the self-assessment form
 def main():
@@ -243,13 +245,15 @@ def main():
         scores_data["Category"] = pd.Categorical(scores_data["Category"], categories=ordered_categories, ordered=True)
         scores_data = scores_data.sort_values(by=["Category", "Percentage"], ascending=[True, False])
 
-        # Create a bar chart for scores (percentage)
-        fig_bar = px.bar(scores_data, x="Category", y="Percentage", color="Type", title="Self Assessment Scores by Category and Type (Percentage)",
-                         color_discrete_sequence=["#377bff", "#15965f", "#fa6868"], text="Percentage")
-        st.plotly_chart(fig_bar)
+        # Create a custom horizontal bar chart for scores (percentage)
+        custom_horizontal_bar_chart(scores_data)
 
         # Create a custom horizontal bar chart for total scores per category
-        custom_horizontal_bar_chart(total_scores_df)
+        st.markdown("<h3>Total Scores by Category</h3>", unsafe_allow_html=True)
+        for index, row in total_scores_df.iterrows():
+            percentage = (row["Total Score"] / row["Max Score"]) * 100
+            custom_progress_bar(percentage, color="#377bff")
+            st.markdown(f"**{row['Category']}**: {row['Total Score']} out of {row['Max Score']} ({percentage:.2f}%)", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
