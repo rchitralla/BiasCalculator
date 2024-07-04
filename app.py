@@ -226,13 +226,13 @@ def main():
                          color_discrete_sequence=["#377bff", "#15965f", "#fa6868"], text="Percentage")
         st.plotly_chart(fig_bar)
 
-        # Create a horizontal bar chart for total scores per category (percentage)
-        fig_total_percentage = px.bar(total_scores_df, y="Category", x="Percentage", orientation='h', title="Total Scores by Category (Percentage)",
-                                      color="Category", text="Percentage", range_x=[0, 100],
+        # Create a horizontal bar chart for total scores per category (actual scores)
+        fig_total_score = px.bar(total_scores_df, y="Category", x="Total Score", orientation='h', title="Total Scores by Category (Actual Scores)",
+                                      color="Category", text="Total Score",
                                       color_discrete_sequence=px.colors.qualitative.Pastel)
-        fig_total_percentage.update_traces(texttemplate='%{text:.2f}', textposition='outside')
-        fig_total_percentage.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
-        st.plotly_chart(fig_total_percentage)
+        fig_total_score.update_traces(texttemplate='%{text:.2f}', textposition='outside')
+        fig_total_score.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+        st.plotly_chart(fig_total_score)
 
         # Create a doughnut chart
         fig_doughnut = px.pie(scores_data, names='Category', values='Score', title='Score Distribution by Category',
