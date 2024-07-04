@@ -168,29 +168,18 @@ def custom_progress_bar(percentage, color="#377bff"):
         unsafe_allow_html=True
     )
 
-# Function to create custom horizontal bar chart
-def custom_horizontal_bar_chart(total_scores_df):
-    st.markdown("<h3>Total Scores by Category</h3>", unsafe_allow_html=True)
-    for index, row in total_scores_df.iterrows():
-        percentage = (row["Total Score"] / row["Max Score"]) * 100
-        custom_progress_bar(percentage, color="#377bff")
-        st.markdown(f"**{row['Category']}**: {row['Total Score']} out of {row['Max Score']} ({percentage:.2f}%)", unsafe_allow_html=True)
-
 # Function to create custom stacked bar chart
 def custom_stacked_bar_chart(scores_data):
     st.markdown("<h3>Self Assessment Scores by Category and Type (Stacked)</h3>", unsafe_allow_html=True)
     for category in scores_data["Category"].unique():
         st.markdown(f"### {category}", unsafe_allow_html=True)
         category_data = scores_data[scores_data["Category"] == category]
-        total_percentage = 0
         bar_html = '<div style="width: 100%; background-color: #e0e0e0; border-radius: 5px; display: flex; align-items: center;">'
         for _, row in category_data.iterrows():
             percentage = row["Percentage"]
-            total_percentage += percentage
             bar_html += f'<div style="width: {percentage}%; background-color: #377bff; padding: 5px; color: white; text-align: center; border-radius: 5px;">{row["Type"]} ({percentage:.2f}%)</div>'
         bar_html += '</div>'
         st.markdown(bar_html, unsafe_allow_html=True)
-        st.markdown(f"**Total**: {total_percentage:.2f}%")
 
 # Main function to display the self-assessment form
 def main():
@@ -248,20 +237,13 @@ def main():
                 flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score, "Percentage": percentage})
         scores_data = pd.DataFrame(flattened_scores)
 
-        # Calculate total scores per category for sorting
-        total_scores_list = [{"Category": category_name, "Total Score": score, "Max Score": max_scores_per_category[category_name], "Percentage": (score / max_scores_per_category[category_name]) * 100} for category_name, score in total_scores_per_category.items()]
-        total_scores_df = pd.DataFrame(total_scores_list).sort_values(by="Total Score", ascending=False)
-
         # Sort the scores_data based on the ordered categories
-        ordered_categories = total_scores_df["Category"].tolist()
+        ordered_categories = scores_data["Category"].unique()
         scores_data["Category"] = pd.Categorical(scores_data["Category"], categories=ordered_categories, ordered=True)
         scores_data = scores_data.sort_values(by=["Category", "Percentage"], ascending=[True, False])
 
         # Create a custom horizontal stacked bar chart for scores (percentage)
         custom_stacked_bar_chart(scores_data)
-
-        # Create a custom horizontal bar chart for total scores per category
-        custom_horizontal_bar_chart(total_scores_df)
 
 if __name__ == "__main__":
     main()
