@@ -110,7 +110,7 @@ def display_questions():
             st.session_state[key] = 1
 
         selected_option = st.selectbox(
-            "Select your response:", options, index=options.index(st.session_state[key]) if st.session_state[key] in options else 1,
+            "Select your response:", options, index=options.index(st.session_state[key]) if st.session_state[key] in options else 0,
             key=key
         )
 
@@ -156,6 +156,19 @@ def calculate_max_scores_per_category(categories):
         max_scores_per_category[category_name] = total_questions * 5  # Maximum score is 5 per question
     return max_scores_per_category
 
+# Function to create custom progress bar
+def custom_progress_bar(percentage, color="#377bff"):
+    st.markdown(
+        f"""
+        <div style="width: 100%; background-color: #e0e0e0; border-radius: 5px;">
+            <div style="width: {percentage}%; background-color: {color}; padding: 5px; color: white; text-align: center; border-radius: 5px;">
+                {percentage}%
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 # Main function to display the self-assessment form
 def main():
     st.image(logo_path, width=200)  # Add your logo at the top
@@ -197,9 +210,9 @@ def main():
             max_score = max_scores_per_category[category_name]
             st.write(f"**{category_name}: {score} out of {max_score}**")
 
-            # Calculate and display progress bar
+            # Calculate and display custom progress bar
             progress = int((score / max_score) * 100)
-            st.progress(progress)
+            custom_progress_bar(progress)
 
         # Prepare data for visualization
         flattened_scores = []
