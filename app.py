@@ -7,81 +7,75 @@ logo_path = "Logo.png"
 
 # Define the categories, types, and questions
 categories = {
-    "Culture & Engagement": {
-        "Individual Actions": [
-            "I use language carefully to avoid terms that may be degrading or hurtful."
-        ],
-        "Institution Actions": [
-            "I support reviewing policies across all functions to ensure they are inclusive and free from bias."
-        ]
-    },
-    "Development": {
-        "Individual Actions": [
-            "I sponsor and mentor employees from historically marginalized groups.",
-            "I create individual development plans for every team member.",
-            "I hold my team accountable for mentoring and sponsoring marginalized employees, including in performance reviews."
-        ],
-        "Industry Actions": [
-            "I mentor and sponsor people from marginalized groups within and outside my organization."
-        ],
-        "Institution Actions": [
-            "I mentor and sponsor people from marginalized groups within and outside my organization.",
-            "I monitor training participation to ensure inclusion of all backgrounds.",
-            "I support formal mentoring and sponsorship programs in my organization.",
-            "I support ongoing inclusion/unconscious bias training for all employees."
-        ]
-    },
-    "Exit & Retain": {
-        "Individual Actions": [
-            "I personally speak to critical employees from all backgrounds to understand their exit and stay reasons."
-        ],
-        "Institution Actions": [
-            "My function conducts regular exit interviews.",
-            "My function takes actions to improve retention of people from all backgrounds."
-        ]
-    },
     "General": {
         "Individual Actions": [
-            "I speak up when team members say things based on stereotypes or assumptions.",
-            "I build strong partnerships with communities and organizations supporting historically marginalized groups.",
-            "I give equal attention to people from all backgrounds.",
-            "I value dissenting opinions, even when they make me uncomfortable.",
-            "I examine my connections and diversify the perspectives and experiences around me.",
-            "I consider multiple data sources and avoid relying on 'gut reaction' for decisions."
+            "I speak up when members of my team say things that are rooted in stereotype or assumption",
+            "I get involved with and build strong, meaningful partnerships with communities of/organizations that support historically marginalized groups",
+            "I intentionally give equal attention to people from all backgrounds",
+            "I value dissenting opinions, even when it makes me uncomfortable",
+            "I regularly examine my most frequent connections and consider how I can further diversify the perspectives and experiences of those around me",
+            "I consider multiple sources of data when making decisions and I don’t rely too often on 'gut reaction'"
         ],
         "Institution Actions": [
-            "I review the team for diversity when starting a project and take action if it's not diverse.",
-            "I encourage my team to speak up against stereotypes or assumptions.",
-            "I promote the sharing of dissenting opinions across the team.",
-            "I seek insights from Employee Resource Groups to improve my function/team/department."
-        ],
-        "Industry Actions": [
-            "I build strong partnerships with communities supporting historically marginalized groups."
-        ]
-    },
-    "Performance & Reward": {
-        "Individual Actions": [
-            "I regularly review and address bias/equity in pay decisions.",
-            "During performance reviews, I check ratings distributions by demographic for potential bias."
-        ],
-        "Institution Actions": [
-            "I support the systemic review of pay equity and performance ratings by demographic annually."
-        ],
-        "Industry Actions": [
-            "I support publicly sharing pay equity results and plans to address gaps."
+            "I encourage everyone in my team to speak up when they hear things that are rooted in stereotype or assumption",
+            "When I launch a new project or piece of work, I review the team assigned to ensure it's fully diverse, and take action if it’s not",
+            "I encourage dissenting opinions to be shared across the team",
+            "I encourage my team members to get involved Employee Resource Groups",
+            "I proactively seek insights from various Employee Resource Groups to make my function/team/department better"
         ]
     },
     "Recruiting & Hiring": {
         "Individual Actions": [
-            "I wait to decide on hiring until there is a balanced slate of candidates.",
-            "I use structured interview guides and consistent criteria for all candidates.",
-            "I use structured guides and consistent criteria for all interviews.",
-            "Every new team member takes inclusion/unconscious bias training when starting."
+            "When hiring a member of my direct team, I hold off on making a selection decision until there is a balanced slate of candidates",
+            "When interviewing for a new team member, I use structured interview guides and rate all candidates according to consistent criteria and job requirements",
+            "Every new member of my direct team takes inclusion/unconscious bias training when they start in a new role"
         ],
         "Institution Actions": [
-            "My function has a balanced slate policy.",
-            "My function requires structured interviews or diverse panels for all roles.",
-            "My function includes inclusion/unconscious bias training in new hire onboarding."
+            "My function has institutionalized a balanced slate policy",
+            "My function requires structured interviews or diverse interview panels for all open roles",
+            "My function has embedded inclusion/unconscious bias training into new hire onboarding"
+        ]
+    },
+    "Culture & Engagement": {
+        "Individual Actions": [
+            "I evaluate my use of language and avoid terms/phrases that may unintentionally be degrading or hurtful to people different than me"
+        ],
+        "Institution Actions": [
+            "I participate in and support the review or policies & practices across all functions (not just HR) and to ensure these are inclusive and free from bias"
+        ]
+    },
+    "Development": {
+        "Individual Actions": [
+            "I actively sponsor and mentor employees from historically marginalized groups",
+            "I regularly mentor and sponsor women/people from historically marginalized groups outside of my organization and across my industry",
+            "I hold the members of my team accountable for mentoring and sponsoring employees from historically marginalized groups (and incorporate this into annual performance reviews)",
+            "I create detailed individual development plans for every member of my team"
+        ],
+        "Institution Actions": [
+            "I visibly support the formal mentoring and sponsorship programs my organization implements",
+            "I monitor my team’s participation in training programs to ensure employees from all different backgrounds are included",
+            "I outwardly support ongoing inclusion/unconscious bias training for all employees"
+        ]
+    },
+    "Performance & Reward": {
+        "Individual Actions": [
+            "I regularly review and address bias/equity in pay decisions",
+            "When conducting performance reviews, I review performance ratings distributions by demographic to identify potential bias"
+        ],
+        "Institution Actions": [
+            "I visibly support the systemic review of pay equity and performance rating distributions by demographic group annually"
+        ],
+        "Industry Actions": [
+            "I visibly support the public publication of pay equity results and our plans to mitigate any gaps"
+        ]
+    },
+    "Exit & Retain": {
+        "Individual Actions": [
+            "I personally and intentionally speak to critical employees from all different backgrounds to explore exit and stay reasons"
+        ],
+        "Institution Actions": [
+            "My function regularly conducts exit interviews",
+            "My function takes necessary actions to improve the retention of people from all backgrounds"
         ]
     }
 }
