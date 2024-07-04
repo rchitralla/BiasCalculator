@@ -228,7 +228,7 @@ def main():
 
         # Create a horizontal bar chart for total scores per category (actual scores)
         fig_total_score = px.bar(total_scores_df, y="Category", x="Total Score", orientation='h', title="Total Scores by Category (Actual Scores)",
-                                      color="Category", text="Total Score",
+                                      color="Category", text="Total Score", range_x=[0, max(total_scores_df["Max Score"])],
                                       color_discrete_sequence=px.colors.qualitative.Pastel)
         fig_total_score.update_traces(texttemplate='%{text:.2f}', textposition='outside')
         fig_total_score.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
