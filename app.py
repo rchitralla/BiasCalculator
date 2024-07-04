@@ -247,10 +247,6 @@ def main():
         fig_total_score.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
         st.plotly_chart(fig_total_score)
 
-        # Create a doughnut chart
-        fig_doughnut = px.pie(scores_data, names='Category', values='Score', title='Score Distribution by Category',
-                              hole=0.4, color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
-        st.plotly_chart(fig_doughnut)
 
 if __name__ == "__main__":
     main()
