@@ -169,6 +169,15 @@ def custom_progress_bar(percentage, color="#377bff"):
         unsafe_allow_html=True
     )
 
+# Function to create custom horizontal bar chart
+def custom_horizontal_bar_chart(total_scores_df):
+    max_score = max(total_scores_df["Max Score"])
+    st.markdown("<h3>Total Scores by Category</h3>", unsafe_allow_html=True)
+    for index, row in total_scores_df.iterrows():
+        percentage = (row["Total Score"] / row["Max Score"]) * 100
+        custom_progress_bar(percentage, color="#377bff")
+        st.markdown(f"**{row['Category']}**: {row['Total Score']} out of {row['Max Score']} ({percentage:.2f}%)", unsafe_allow_html=True)
+
 # Main function to display the self-assessment form
 def main():
     st.image(logo_path, width=200)  # Add your logo at the top
@@ -239,14 +248,8 @@ def main():
                          color_discrete_sequence=["#377bff", "#15965f", "#fa6868"], text="Percentage")
         st.plotly_chart(fig_bar)
 
-        # Create a horizontal bar chart for total scores per category (actual scores)
-        fig_total_score = px.bar(total_scores_df, y="Category", x="Total Score", orientation='h', title="Total Scores by Category (Actual Scores)",
-                                      color="Category", text="Total Score", range_x=[0, max(total_scores_df["Max Score"])],
-                                      color_discrete_sequence=px.colors.qualitative.Pastel)
-        fig_total_score.update_traces(texttemplate='%{text:.2f}', textposition='outside')
-        fig_total_score.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
-        st.plotly_chart(fig_total_score)
-
+        # Create a custom horizontal bar chart for total scores per category
+        custom_horizontal_bar_chart(total_scores_df)
 
 if __name__ == "__main__":
     main()
