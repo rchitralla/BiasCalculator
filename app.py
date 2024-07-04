@@ -207,7 +207,9 @@ def main():
             for type_name, questions in types.items():
                 response_scores = [response['score'] for response in responses if (response['category'] == category_name) and (response['type'] == type_name) and (type(response['score']) == int)]
                 score = sum(response_scores)
-                flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score})
+                max_score = len(questions) * 5
+                percentage = (score / max_score) * 100
+                flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score, "Percentage": percentage})
         scores_data = pd.DataFrame(flattened_scores)
 
         # Calculate total scores per category for sorting
@@ -217,12 +219,20 @@ def main():
         # Sort the scores_data based on the ordered categories
         ordered_categories = total_scores_df["Category"].tolist()
         scores_data["Category"] = pd.Categorical(scores_data["Category"], categories=ordered_categories, ordered=True)
-        scores_data = scores_data.sort_values(by=["Category", "Score"], ascending=[True, False])
+        scores_data = scores_data.sort_values(by=["Category", "Percentage"], ascending=[True, False])
 
-        # Create a bar chart
-        fig_bar = px.bar(scores_data, x="Category", y="Score", color="Type", title="Self Assessment Scores by Category and Type",
-                         color_discrete_sequence=["#377bff", "#15965f", "#fa6868"])
+        # Create a bar chart for scores
+        fig_bar = px.bar(scores_data, x="Category", y="Percentage", color="Type", title="Self Assessment Scores by Category and Type (Percentage)",
+                         color_discrete_sequence=["#377bff", "#15965f", "#fa6868"], text="Percentage")
         st.plotly_chart(fig_bar)
+
+        # Create a bar chart for each category in percentages
+        fig_total_percentage = px.bar(total_scores_df, x="Category", y="Total Score", title="Total Scores by Category (Percentage)",
+                                      color="Category", text="Total Score", range_y=[0, 100],
+                                      color_discrete_sequence=px.colors.qualitative.Pastel)
+        fig_total_percentage.update_traces(texttemplate='%{text:.2f}', textposition='outside')
+        fig_total_percentage.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+        st.plotly_chart(fig_total_percentage)
 
         # Create a doughnut chart
         fig_doughnut = px.pie(scores_data, names='Category', values='Score', title='Score Distribution by Category',
