@@ -213,7 +213,7 @@ def main():
         scores_data = pd.DataFrame(flattened_scores)
 
         # Calculate total scores per category for sorting
-        total_scores_list = [{"Category": category_name, "Total Score": score, "Max Score": max_scores_per_category[category_name]} for category_name, score in total_scores_per_category.items()]
+        total_scores_list = [{"Category": category_name, "Total Score": score, "Max Score": max_scores_per_category[category_name], "Percentage": (score / max_scores_per_category[category_name]) * 100} for category_name, score in total_scores_per_category.items()]
         total_scores_df = pd.DataFrame(total_scores_list).sort_values(by="Total Score", ascending=False)
 
         # Sort the scores_data based on the ordered categories
@@ -221,14 +221,14 @@ def main():
         scores_data["Category"] = pd.Categorical(scores_data["Category"], categories=ordered_categories, ordered=True)
         scores_data = scores_data.sort_values(by=["Category", "Percentage"], ascending=[True, False])
 
-        # Create a bar chart for scores
+        # Create a bar chart for scores (percentage)
         fig_bar = px.bar(scores_data, x="Category", y="Percentage", color="Type", title="Self Assessment Scores by Category and Type (Percentage)",
                          color_discrete_sequence=["#377bff", "#15965f", "#fa6868"], text="Percentage")
         st.plotly_chart(fig_bar)
 
-        # Create a bar chart for each category in percentages
-        fig_total_percentage = px.bar(total_scores_df, x="Category", y="Total Score", title="Total Scores by Category (Percentage)",
-                                      color="Category", text="Total Score", range_y=[0, 100],
+        # Create a horizontal bar chart for total scores per category (percentage)
+        fig_total_percentage = px.bar(total_scores_df, y="Category", x="Percentage", orientation='h', title="Total Scores by Category (Percentage)",
+                                      color="Category", text="Percentage", range_x=[0, 100],
                                       color_discrete_sequence=px.colors.qualitative.Pastel)
         fig_total_percentage.update_traces(texttemplate='%{text:.2f}', textposition='outside')
         fig_total_percentage.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
