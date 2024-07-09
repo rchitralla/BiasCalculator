@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import random
-from fpdf import FPDF
-import base64
 
 # Path to the logo image
 logo_path = "Logo.png"
@@ -98,7 +96,7 @@ def display_questions():
     responses = []
     for item in st.session_state['shuffled_questions']:
         st.write(item["question"])
-        options = [1, 2, 3, 4, 5]
+        options = [1, 2, 3, 4, 5]  # Add None as the default option
         key = f"{item['category']}_{item['type']}_{item['question']}"
 
         if key not in st.session_state:
@@ -177,31 +175,6 @@ def custom_stacked_bar_chart(scores_data):
         bar_html += '</div>'
         st.markdown(bar_html, unsafe_allow_html=True)
 
-# Function to generate PDF using FPDF
-def generate_pdf(responses, total_scores_per_category, max_scores_per_category, output_path):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    
-    pdf.cell(200, 10, txt="Assessment Results", ln=True, align='C')
-    pdf.cell(200, 10, txt="Here are your self-assessment results:", ln=True, align='L')
-    
-    for category_name, score in total_scores_per_category.items():
-        max_score = max_scores_per_category[category_name]
-        progress = int((score / max_score) * 100)
-        pdf.cell(200, 10, txt=f"{category_name}: {score} out of {max_score}", ln=True, align='L')
-        pdf.cell(200, 10, txt=f"Progress: {progress}%", ln=True, align='L')
-
-    pdf.output(output_path)
-
-# Function to get base64 encoded string for PDF
-def get_pdf_download_link(pdf_path, download_name):
-    with open(pdf_path, "rb") as f:
-        pdf_data = f.read()
-    b64 = base64.b64encode(pdf_data).decode()
-    href = f'<a href="data:application/octet-stream;base64,{b64}" download="{download_name}">Download PDF</a>'
-    return href
-
 # Main function to display the self-assessment form
 def main():
     st.image(logo_path, width=200)  # Add your logo at the top
@@ -265,13 +238,6 @@ def main():
 
         # Create a custom horizontal stacked bar chart for scores (percentage)
         custom_stacked_bar_chart(scores_data)
-
-        # Generate PDF
-        pdf_path = "/tmp/assessment_results.pdf"
-        generate_pdf(responses, total_scores_per_category, max_scores_per_category, pdf_path)
-
-        # Provide download link
-        st.markdown(get_pdf_download_link(pdf_path, "Assessment_Results.pdf"), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
