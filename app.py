@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import random
-import pdfkit
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 import base64
 
 # Path to the logo image
@@ -9,7 +10,77 @@ logo_path = "Logo.png"
 
 # Define the categories, types, and questions
 categories = {
-    # ... (categories definition)
+    "General": {
+        "Individual Actions": [
+            "I speak up when members of my team say things that are rooted in stereotype or assumption",
+            "I get involved with and build strong, meaningful partnerships with communities of/organizations that support historically marginalized groups",
+            "I intentionally give equal attention to people from all backgrounds",
+            "I value dissenting opinions, even when it makes me uncomfortable",
+            "I regularly examine my most frequent connections and consider how I can further diversify the perspectives and experiences of those around me",
+            "I consider multiple sources of data when making decisions and I don’t rely too often on 'gut reaction'"
+        ],
+        "Institution Actions": [
+            "I encourage everyone in my team to speak up when they hear things that are rooted in stereotype or assumption",
+            "When I launch a new project or piece of work, I review the team assigned to ensure it's fully diverse, and take action if it’s not",
+            "I encourage dissenting opinions to be shared across the team",
+            "I encourage my team members to get involved Employee Resource Groups",
+            "I proactively seek insights from various Employee Resource Groups to make my function/team/department better"
+        ]
+    },
+    "Recruiting & Hiring": {
+        "Individual Actions": [
+            "When hiring a member of my direct team, I hold off on making a selection decision until there is a balanced slate of candidates",
+            "When interviewing for a new team member, I use structured interview guides and rate all candidates according to consistent criteria and job requirements",
+            "Every new member of my direct team takes inclusion/unconscious bias training when they start in a new role"
+        ],
+        "Institution Actions": [
+            "My function has institutionalized a balanced slate policy",
+            "My function requires structured interviews or diverse interview panels for all open roles",
+            "My function has embedded inclusion/unconscious bias training into new hire onboarding"
+        ]
+    },
+    "Culture & Engagement": {
+        "Individual Actions": [
+            "I evaluate my use of language and avoid terms/phrases that may unintentionally be degrading or hurtful to people different than me"
+        ],
+        "Institution Actions": [
+            "I participate in and support the review or policies & practices across all functions (not just HR) and to ensure these are inclusive and free from bias"
+        ]
+    },
+    "Development": {
+        "Individual Actions": [
+            "I actively sponsor and mentor employees from historically marginalized groups",
+            "I regularly mentor and sponsor women/people from historically marginalized groups outside of my organization and across my industry",
+            "I hold the members of my team accountable for mentoring and sponsoring employees from historically marginalized groups (and incorporate this into annual performance reviews)",
+            "I create detailed individual development plans for every member of my team"
+        ],
+        "Institution Actions": [
+            "I visibly support the formal mentoring and sponsorship programs my organization implements",
+            "I monitor my team’s participation in training programs to ensure employees from all different backgrounds are included",
+            "I outwardly support ongoing inclusion/unconscious bias training for all employees"
+        ]
+    },
+    "Performance & Reward": {
+        "Individual Actions": [
+            "I regularly review and address bias/equity in pay decisions",
+            "When conducting performance reviews, I review performance ratings distributions by demographic to identify potential bias"
+        ],
+        "Institution Actions": [
+            "I visibly support the systemic review of pay equity and performance rating distributions by demographic group annually"
+        ],
+        "Industry Actions": [
+            "I visibly support the public publication of pay equity results and our plans to mitigate any gaps"
+        ]
+    },
+    "Exit & Retain": {
+        "Individual Actions": [
+            "I personally and intentionally speak to critical employees from all different backgrounds to explore exit and stay reasons"
+        ],
+        "Institution Actions": [
+            "My function regularly conducts exit interviews",
+            "My function takes necessary actions to improve the retention of people from all backgrounds"
+        ]
+    }
 }
 
 # Flattened list of questions to display without headers
@@ -107,13 +178,24 @@ def custom_stacked_bar_chart(scores_data):
         bar_html += '</div>'
         st.markdown(bar_html, unsafe_allow_html=True)
 
-# Function to generate PDF
-def generate_pdf(html_content, output_path):
-    options = {
-        'page-size': 'Letter',
-        'encoding': 'UTF-8',
-    }
-    pdfkit.from_string(html_content, output_path, options=options)
+# Function to generate PDF using reportlab
+def generate_pdf(responses, total_scores_per_category, max_scores_per_category, output_path):
+    c = canvas.Canvas(output_path, pagesize=letter)
+    width, height = letter
+
+    c.drawString(100, height - 100, "Assessment Results")
+    c.drawString(100, height - 120, "Here are your self-assessment results:")
+
+    y = height - 140
+    for category_name, score in total_scores_per_category.items():
+        max_score = max_scores_per_category[category_name]
+        progress = int((score / max_score) * 100)
+        c.drawString(100, y, f"{category_name}: {score} out of {max_score}")
+        y -= 20
+        c.rect(100, y, progress * 2, 10, fill=1)
+        y -= 20
+
+    c.save()
 
 # Function to get base64 encoded string for PDF
 def get_pdf_download_link(pdf_path, download_name):
@@ -187,42 +269,9 @@ def main():
         # Create a custom horizontal stacked bar chart for scores (percentage)
         custom_stacked_bar_chart(scores_data)
 
-        # Generate HTML content for the results
-        html_content = f"""
-        <html>
-        <head>
-        <style>
-            body {{ font-family: Arial, sans-serif; }}
-            .progress-bar {{
-                width: 100%; background-color: #e0e0e0; border-radius: 5px;
-            }}
-            .progress {{
-                width: {{}}%; background-color: #377bff; padding: 5px; color: white; text-align: center; border-radius: 5px;
-            }}
-            .category-title {{ font-weight: bold; }}
-        </style>
-        </head>
-        <body>
-        <h1>Assessment Results</h1>
-        <p>Here are your self-assessment results:</p>
-        """
-
-        for category_name, score in total_scores_per_category.items():
-            max_score = max_scores_per_category[category_name]
-            progress = int((score / max_score) * 100)
-            html_content += f"""
-            <div class="category-title">{category_name}: {score} out of {max_score}</div>
-            <div class="progress-bar">
-                <div class="progress" style="width: {progress}%;"></div>
-            </div>
-            <br/>
-            """
-
-        html_content += "</body></html>"
-
         # Generate PDF
         pdf_path = "/tmp/assessment_results.pdf"
-        generate_pdf(html_content, pdf_path)
+        generate_pdf(responses, total_scores_per_category, max_scores_per_category, pdf_path)
 
         # Provide download link
         st.markdown(get_pdf_download_link(pdf_path, "Assessment_Results.pdf"), unsafe_allow_html=True)
