@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from fpdf import FPDF
 import base64
 
 # Path to the logo image
@@ -178,24 +177,22 @@ def custom_stacked_bar_chart(scores_data):
         bar_html += '</div>'
         st.markdown(bar_html, unsafe_allow_html=True)
 
-# Function to generate PDF using reportlab
+# Function to generate PDF using FPDF
 def generate_pdf(responses, total_scores_per_category, max_scores_per_category, output_path):
-    c = canvas.Canvas(output_path, pagesize=letter)
-    width, height = letter
-
-    c.drawString(100, height - 100, "Assessment Results")
-    c.drawString(100, height - 120, "Here are your self-assessment results:")
-
-    y = height - 140
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    
+    pdf.cell(200, 10, txt="Assessment Results", ln=True, align='C')
+    pdf.cell(200, 10, txt="Here are your self-assessment results:", ln=True, align='L')
+    
     for category_name, score in total_scores_per_category.items():
         max_score = max_scores_per_category[category_name]
         progress = int((score / max_score) * 100)
-        c.drawString(100, y, f"{category_name}: {score} out of {max_score}")
-        y -= 20
-        c.rect(100, y, progress * 2, 10, fill=1)
-        y -= 20
+        pdf.cell(200, 10, txt=f"{category_name}: {score} out of {max_score}", ln=True, align='L')
+        pdf.cell(200, 10, txt=f"Progress: {progress}%", ln=True, align='L')
 
-    c.save()
+    pdf.output(output_path)
 
 # Function to get base64 encoded string for PDF
 def get_pdf_download_link(pdf_path, download_name):
