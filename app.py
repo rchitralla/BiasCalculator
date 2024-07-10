@@ -147,11 +147,11 @@ def calculate_max_scores_per_category(categories):
     return max_scores_per_category
 
 # Function to create custom progress bar
-def custom_progress_bar(percentage, colour="#377bff"):
+def custom_progress_bar(percentage, color="#377bff"):
     st.markdown(
         f"""
-        <div style="width: 100%; background-colour: #e0e0e0; border-radius: 5px;">
-            <div style="width: {percentage}%; background-colour: {colour}; padding: 5px; colour: white; text-align: center; border-radius: 5px;">
+        <div style="width: 100%; background-color: #e0e0e0; border-radius: 5px;">
+            <div style="width: {percentage}%; background-color: {color}; padding: 5px; color: white; text-align: center; border-radius: 5px;">
                 {percentage}%
             </div>
         </div>
@@ -168,7 +168,7 @@ def custom_stacked_bar_chart(scores_data):
         category_data = scores_data[scores_data["Category"] == category]
         
         fig, ax = plt.subplots(figsize=(10, 3))
-        ax.barh(category_data["Type"], category_data["Percentage"], colour='#377bff')
+        ax.barh(category_data["Type"], category_data["Percentage"], color='#377bff')
         ax.set_xlim(0, 100)
         ax.set_xlabel('Percentage', fontsize=12)
         ax.set_title(category, fontsize=14)
