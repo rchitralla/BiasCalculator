@@ -15,7 +15,7 @@ categories = {
     "General": {
         "Individual Actions": [
             "I speak up when members of my team say things that are rooted in stereotype or assumption",
-            "I get involved with and build strong, meaningful partnerships with communities of/organizations that support historically marginalized groups",
+            "I get involved with and build strong, meaningful partnerships with communities of/organisations that support historically marginalised groups",
             "I intentionally give equal attention to people from all backgrounds",
             "I value dissenting opinions, even when it makes me uncomfortable",
             "I regularly examine my most frequent connections and consider how I can further diversify the perspectives and experiences of those around me",
@@ -36,7 +36,7 @@ categories = {
             "Every new member of my direct team takes inclusion/unconscious bias training when they start in a new role"
         ],
         "Institution Actions": [
-            "My function has institutionalized a balanced slate policy",
+            "My function has institutionalised a balanced slate policy",
             "My function requires structured interviews or diverse interview panels for all open roles",
             "My function has embedded inclusion/unconscious bias training into new hire onboarding"
         ]
@@ -46,19 +46,19 @@ categories = {
             "I evaluate my use of language and avoid terms/phrases that may unintentionally be degrading or hurtful to people different than me"
         ],
         "Institution Actions": [
-            "I participate in and support the review or policies & practices across all functions (not just HR) and to ensure these are inclusive and free from bias"
+            "I participate in and support the review of policies & practices across all functions (not just HR) to ensure these are inclusive and free from bias"
         ]
     },
     "Development": {
         "Individual Actions": [
-            "I actively sponsor and mentor employees from historically marginalized groups",
-            "I regularly mentor and sponsor women/people from historically marginalized groups outside of my organization and across my industry",
-            "I hold the members of my team accountable for mentoring and sponsoring employees from historically marginalized groups (and incorporate this into annual performance reviews)",
+            "I actively sponsor and mentor employees from historically marginalised groups",
+            "I regularly mentor and sponsor women/people from historically marginalised groups outside of my organisation and across my industry",
+            "I hold the members of my team accountable for mentoring and sponsoring employees from historically marginalised groups (and incorporate this into annual performance reviews)",
             "I create detailed individual development plans for every member of my team"
         ],
         "Institution Actions": [
-            "I visibly support the formal mentoring and sponsorship programs my organization implements",
-            "I monitor my team’s participation in training programs to ensure employees from all different backgrounds are included",
+            "I visibly support the formal mentoring and sponsorship programmes my organisation implements",
+            "I monitor my team’s participation in training programmes to ensure employees from all different backgrounds are included",
             "I outwardly support ongoing inclusion/unconscious bias training for all employees"
         ]
     },
@@ -147,11 +147,11 @@ def calculate_max_scores_per_category(categories):
     return max_scores_per_category
 
 # Function to create custom progress bar
-def custom_progress_bar(percentage, color="#377bff"):
+def custom_progress_bar(percentage, colour="#377bff"):
     st.markdown(
         f"""
-        <div style="width: 100%; background-color: #e0e0e0; border-radius: 5px;">
-            <div style="width: {percentage}%; background-color: {color}; padding: 5px; color: white; text-align: center; border-radius: 5px;">
+        <div style="width: 100%; background-colour: #e0e0e0; border-radius: 5px;">
+            <div style="width: {percentage}%; background-colour: {colour}; padding: 5px; colour: white; text-align: center; border-radius: 5px;">
                 {percentage}%
             </div>
         </div>
@@ -168,7 +168,7 @@ def custom_stacked_bar_chart(scores_data):
         category_data = scores_data[scores_data["Category"] == category]
         
         fig, ax = plt.subplots(figsize=(10, 3))
-        ax.barh(category_data["Type"], category_data["Percentage"], color='#377bff')
+        ax.barh(category_data["Type"], category_data["Percentage"], colour='#377bff')
         ax.set_xlim(0, 100)
         ax.set_xlabel('Percentage', fontsize=12)
         ax.set_title(category, fontsize=14)
@@ -204,9 +204,9 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     try:
         logo = ImageReader(logo_path)
         logo_width, logo_height = logo.getSize()
-        aspect_ratio = logo_height / logo_width
+        aspect ratio = logo_height / logo_width
         logo_display_width = 100
-        logo_display_height = logo_display_width * aspect_ratio
+        logo_display_height = logo_display_width * aspect ratio
         c.drawImage(logo, margin, y - logo_display_height, width=logo_display_width, height=logo_display_height)
         y -= (logo_display_height + 30)
     except Exception as e:
@@ -266,12 +266,12 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         y -= 10  # Add extra space between sections
 
     # Embed charts into the PDF, spread across up to 3 pages
-    charts_per_page = max(1, (len(chart_images) + 2) // 3)  # +2 ensures at least 1 chart on each page
+    charts_per page = max(1, (len(chart_images) + 2) // 3)  # +2 ensures at least 1 chart on each page
 
     chart_index = 0
     for page in range(3):
         y = height - 50
-        for _ in range(charts_per_page):
+        for _ in range(charts_per page):
             if chart_index >= len(chart_images):
                 break
             img = chart_images[chart_index]
@@ -300,7 +300,7 @@ def main():
         
     st.title("Anti-Bias Self Assessment Tool")
     st.write(
-        "This tool enables you to explore your own behaviors related to bias & inclusion in the workplace. "
+        "This tool enables you to explore your own behaviours related to bias & inclusion in the workplace. "
         "Your results are yours and yours alone -- they will not be submitted or shared in any manner unless you choose to do so."
     )
     st.write(
@@ -327,7 +327,7 @@ def main():
     # Calculate the maximum possible scores per category
     max_scores_per_category = calculate_max_scores_per_category(categories)
 
-    # Display the results and visualizations
+    # Display the results and visualisations
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
 
@@ -366,7 +366,7 @@ def main():
             progress = int((score / max_score) * 100)
             custom_progress_bar(progress)
 
-        # Prepare data for visualization
+        # Prepare data for visualisation
         flattened_scores = []
         for category_name, types in categories.items():
             for type_name, questions in types.items():
