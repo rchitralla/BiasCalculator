@@ -216,26 +216,30 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         c.drawString(margin, y, line)
         y -= 20
 
-    # Add explanations
+    # Add explanations with bold headers
     explanations = [
-        "How to interpret the results",
-        "The questions answered fall under the individual, company, and industry related actions and choices you make every day at work.",
-        "They address key areas from hiring through developing and retaining talent that we as company leaders make in relation to our peers, team members, superiors, and creating a broader impact on the industry.",
-        "Take a look at the scores below and see:",
-        "- Where do you score highest?",
-        "- Which area has the highest potential to improve?",
-        "- Is there anything that surprised you?",
-        "- What are some of the actions that you can take to reduce bias and drive inclusion?",
-        "Capture your reflection for a later conversation.",
-        "Development: Spans actions in the area of developing talent/your team",
-        "General: Covers general work related attitudes and actions",
-        "Recruiting & Hiring: Highlights potential bias in recruiting and hiring talent",
-        "Performance & Reward: Looks at equity in relation to this area of rewarding the team",
-        "Culture & Engagement: Your actions and attitudes related to organisational culture",
-        "Exit & Retention: Actions related to retaining and understanding the reasons for talent drain"
+        ("How to interpret the results", "bold"),
+        ("The questions answered fall under the individual, company, and industry related actions and choices you make every day at work.", "normal"),
+        ("They address key areas from hiring through developing and retaining talent that we as company leaders make in relation to our peers, team members, superiors, and creating a broader impact on the industry.", "normal"),
+        ("Take a look at the scores below and see:", "normal"),
+        ("- Where do you score highest?", "normal"),
+        ("- Which area has the highest potential to improve?", "normal"),
+        ("- Is there anything that surprised you?", "normal"),
+        ("- What are some of the actions that you can take to reduce bias and drive inclusion?", "normal"),
+        ("Capture your reflection for a later conversation.", "normal"),
+        ("Development: Spans actions in the area of developing talent/your team", "bold"),
+        ("General: Covers general work related attitudes and actions", "bold"),
+        ("Recruiting & Hiring: Highlights potential bias in recruiting and hiring talent", "bold"),
+        ("Performance & Reward: Looks at equity in relation to this area of rewarding the team", "bold"),
+        ("Culture & Engagement: Your actions and attitudes related to organisational culture", "bold"),
+        ("Exit & Retention: Actions related to retaining and understanding the reasons for talent drain", "bold")
     ]
 
-    for explanation in explanations:
+    for explanation, style in explanations:
+        if style == "bold":
+            c.setFont("Helvetica-Bold", 12)
+        else:
+            c.setFont("Helvetica", 12)
         lines = wrap_text(explanation, c, width - 2 * margin)
         for line in lines:
             if y - 20 < margin:
@@ -243,13 +247,14 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
                 y = height - 40
             c.drawString(margin, y, line)
             y -= 20
+        y -= 10  # Add extra space between sections
 
     # Embed charts into the PDF, spread across up to 3 pages
-    charts_per_page = len(chart_images) // 3
-    charts_per_page = max(charts_per_page, 1)  # Ensure at least 1 chart per page if we have less than 3 pages
+    charts_per_page = max(1, len(chart_images) // 3)
 
     chart_index = 0
     for page in range(3):
+        y = height - 40
         for _ in range(charts_per_page):
             if chart_index >= len(chart_images):
                 break
@@ -263,7 +268,6 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         if chart_index >= len(chart_images):
             break
         c.showPage()
-        y = height - 40
 
     c.save()
     buffer.seek(0)
