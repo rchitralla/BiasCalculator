@@ -218,7 +218,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     y -= 30
     c.setFont("Helvetica", 12)
     c.drawString(margin, y, "Your results:")
-    y -= 30
+    y -= 20
 
     for category_name, score in total_scores_per_category.items():
         max_score = max_scores_per_category[category_name]
@@ -228,9 +228,9 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
             c.showPage()
             y = height - 50
         c.drawString(margin, y, line)
-        y -= 20
+        y -= 15
 
-    y -= 20  # Extra space before explanations
+    y -= 15  # Extra space before explanations
 
     # Add explanations with bold headers
     explanations = [
@@ -262,8 +262,8 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
                 c.showPage()
                 y = height - 50
             c.drawString(margin, y, line)
-            y -= 20
-        y -= 10  # Add extra space between sections
+            y -= 15
+        y -= 5  # Add extra space between sections
 
     # Embed charts into the PDF, spread across up to 3 pages
     charts_per_page = max(1, (len(chart_images) + 2) // 3)  # +2 ensures at least 1 chart on each page
