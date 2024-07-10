@@ -183,12 +183,12 @@ def custom_stacked_bar_chart(scores_data):
     return chart_images
 
 # Function to generate PDF
-def wrap_text(text, canvas, max_width):
+def wrap_text(text, canvas, max_width, font_size):
     lines = []
     words = text.split()
     while words:
         line = ''
-        while words and canvas.stringWidth(line + words[0] + ' ', "Helvetica", 10) <= max_width:
+        while words and canvas.stringWidth(line + words[0] + ' ', "Helvetica", font_size) <= max_width:
             line += words.pop(0) + ' '
         lines.append(line.strip())
     return lines
@@ -197,15 +197,15 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     buffer = BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
-    margin = 50
-    y = height - 50
+    margin = 40
+    y = height - margin
 
     # Add the logo
     try:
         logo = ImageReader(logo_path)
         logo_width, logo_height = logo.getSize()
         aspect_ratio = logo_height / logo_width
-        logo_display_width = 100
+        logo_display_width = 80
         logo_display_height = logo_display_width * aspect_ratio
         c.drawImage(logo, margin, y - logo_display_height, width=logo_display_width, height=logo_display_height)
         y -= (logo_display_height + 20)
@@ -215,10 +215,10 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
 
     c.setFont("Helvetica-Bold", 14)
     c.drawString(margin, y, "LEAD Network Anti-Bias Self Assessment Tool")
-    y -= 30
+    y -= 20
     c.setFont("Helvetica", 10)
     c.drawString(margin, y, "Your results:")
-    y -= 20
+    y -= 15
 
     for category_name, score in total_scores_per_category.items():
         max_score = max_scores_per_category[category_name]
@@ -226,7 +226,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         line = f"{category_name}: {score} out of {max_score} ({progress}%)"
         if y - 15 < margin:
             c.showPage()
-            y = height - 50
+            y = height - margin
         c.drawString(margin, y, line)
         y -= 15
 
@@ -256,11 +256,11 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
             c.setFont("Helvetica-Bold", 10)
         else:
             c.setFont("Helvetica", 10)
-        lines = wrap_text(explanation, c, width - 2 * margin)
+        lines = wrap_text(explanation, c, width - 2 * margin, 10)
         for line in lines:
             if y - 15 < margin:
                 c.showPage()
-                y = height - 50
+                y = height - margin
             c.drawString(margin, y, line)
             y -= 12
         y -= 5  # Add extra space between sections
