@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import random
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from io import BytesIO
 
 # Path to the logo image
 logo_path = "Logo.png"
@@ -167,6 +170,28 @@ def custom_stacked_bar_chart(scores_data):
         bar_html += '</div>'
         st.markdown(bar_html, unsafe_allow_html=True)
 
+# Function to generate PDF
+def generate_pdf(total_scores_per_category, max_scores_per_category):
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+
+    c.drawString(100, height - 40, "Anti-Bias Self Assessment Tool")
+    c.drawString(100, height - 60, "Your results:")
+
+    y = height - 80
+    for category_name, score in total_scores_per_category.items():
+        max_score = max_scores_per_category[category_name]
+        progress = int((score / max_score) * 100)
+        c.drawString(100, y, f"{category_name}: {score} out of {max_score} ({progress}%)")
+        y -= 20
+
+    c.showPage()
+    c.save()
+    buffer.seek(0)
+
+    return buffer
+
 # Main function to display the self-assessment form
 def main():
     try:
@@ -261,6 +286,15 @@ def main():
 
         # Create a custom horizontal stacked bar chart for scores (percentage)
         custom_stacked_bar_chart(scores_data)
+
+        # Generate and provide download link for PDF
+        pdf_buffer = generate_pdf(total_scores_per_category, max_scores_per_category)
+        st.download_button(
+            label="Download PDF of Results",
+            data=pdf_buffer,
+            file_name="assessment_results.pdf",
+            mime="application/pdf"
+        )
 
 if __name__ == "__main__":
     main()
