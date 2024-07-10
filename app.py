@@ -265,6 +265,9 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
             y -= 12
         y -= 5  # Add extra space between sections
 
+    # Start a new page for the charts
+    c.showPage()
+
     # Embed charts into the PDF, spread across up to 3 pages
     charts_per_page = max(1, (len(chart_images) + 2) // 3)  # +2 ensures at least 1 chart on each page
 
