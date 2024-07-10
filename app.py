@@ -183,7 +183,6 @@ def custom_stacked_bar_chart(scores_data):
     return chart_images
 
 # Function to generate PDF
-
 def wrap_text(text, canvas, max_width):
     lines = []
     words = text.split()
@@ -244,17 +243,27 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
                 y = height - 40
             c.drawString(margin, y, line)
             y -= 20
-    
-    c.showPage()
 
-    # Embed charts into the PDF
-    for img in chart_images:
-        if y - 320 < margin:
-            c.showPage()
-            y = height - 40
-        c.drawImage(ImageReader(img), margin, y - 300, width=width - 2 * margin, height=300)
-        y -= 320
+    # Embed charts into the PDF, spread across up to 3 pages
+    charts_per_page = len(chart_images) // 3
+    charts_per_page = max(charts_per_page, 1)  # Ensure at least 1 chart per page if we have less than 3 pages
+
+    chart_index = 0
+    for page in range(3):
+        for _ in range(charts_per_page):
+            if chart_index >= len(chart_images):
+                break
+            img = chart_images[chart_index]
+            if y - 320 < margin:
+                c.showPage()
+                y = height - 40
+            c.drawImage(ImageReader(img), margin, y - 300, width=width - 2 * margin, height=300)
+            y -= 320
+            chart_index += 1
+        if chart_index >= len(chart_images):
+            break
         c.showPage()
+        y = height - 40
 
     c.save()
     buffer.seek(0)
