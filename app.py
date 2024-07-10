@@ -242,13 +242,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         ("- Which area has the highest potential to improve?", "normal"),
         ("- Is there anything that surprised you?", "normal"),
         ("- What are some of the actions that you can take to reduce bias and drive inclusion?", "normal"),
-        ("Capture your reflection for a later conversation.", "normal"),
-        ("Development: Spans actions in the area of developing talent/your team", "bold_pre"),
-        ("General: Covers general work related attitudes and actions", "bold_pre"),
-        ("Recruiting & Hiring: Highlights potential bias in recruiting and hiring talent", "bold_pre"),
-        ("Performance & Reward: Looks at equity in relation to this area of rewarding the team", "bold_pre"),
-        ("Culture & Engagement: Your actions and attitudes related to organisational culture", "bold_pre"),
-        ("Exit & Retention: Actions related to retaining and understanding the reasons for talent drain", "bold_pre")
+        ("Capture your reflection for a later conversation.", "normal")
     ]
 
     for explanation, style in explanations:
@@ -278,6 +272,17 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
             c.drawString(margin, y, line)
             y -= 12
         y -= 5  # Add extra space between sections
+
+    # Add more space between the specified lines
+    c.setFont("Helvetica", 10)
+    lines = wrap_text("Capture your reflection for a later conversation.", c, width - 2 * margin, 10)
+    y -= 20
+    for line in lines:
+        if y - 15 < margin:
+            c.showPage()
+            y = height - margin
+        c.drawString(margin, y, line)
+        y -= 12
 
     # Start a new page for the charts
     c.showPage()
