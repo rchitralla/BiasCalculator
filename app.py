@@ -167,7 +167,7 @@ def custom_stacked_bar_chart(scores_data):
         st.markdown(f"### {category}", unsafe_allow_html=True)
         category_data = scores_data[scores_data["Category"] == category]
         
-        fig, ax = plt.subplots(figsize=(8, 1))
+        fig, ax = plt.subplots(figsize=(10, 3))
         ax.barh(category_data["Type"], category_data["Percentage"], color='#377bff')
         ax.set_xlim(0, 100)
         ax.set_xlabel('Percentage')
@@ -175,7 +175,7 @@ def custom_stacked_bar_chart(scores_data):
         plt.tight_layout()
         
         buf = BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', dpi=300)  # Increase DPI for better resolution
         buf.seek(0)
         chart_images.append(buf)
         st.image(buf)
@@ -187,7 +187,9 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
 
+    c.setFont("Helvetica-Bold", 16)
     c.drawString(100, height - 40, "Anti-Bias Self Assessment Tool")
+    c.setFont("Helvetica", 12)
     c.drawString(100, height - 60, "Your results:")
 
     y = height - 80
@@ -223,7 +225,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
 
     # Embed charts into the PDF
     for img in chart_images:
-        c.drawImage(ImageReader(img), 100, height - 200, width=400, height=200)
+        c.drawImage(ImageReader(img), 100, height - 500, width=400, height=300)
         c.showPage()
 
     c.save()
