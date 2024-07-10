@@ -205,7 +205,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         logo = ImageReader(logo_path)
         logo_width, logo_height = logo.getSize()
         aspect_ratio = logo_height / logo_width
-        logo_display_width = 80
+        logo_display_width = 60
         logo_display_height = logo_display_width * aspect_ratio
         c.drawImage(logo, margin, y - logo_display_height, width=logo_display_width, height=logo_display_height)
         y -= (logo_display_height + 20)
@@ -213,7 +213,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         st.error("Logo image not found or could not be loaded.")
         st.write(e)
 
-    c.setFont("Helvetica-Bold", 14)
+    c.setFont("Helvetica-Bold", 12)
     c.drawString(margin, y, "LEAD Network Anti-Bias Self Assessment Tool")
     y -= 20
     c.setFont("Helvetica", 10)
