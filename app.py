@@ -243,20 +243,32 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         ("- Is there anything that surprised you?", "normal"),
         ("- What are some of the actions that you can take to reduce bias and drive inclusion?", "normal"),
         ("Capture your reflection for a later conversation.", "normal"),
-        ("Development: Spans actions in the area of developing talent/your team", "bold"),
-        ("General: Covers general work related attitudes and actions", "bold"),
-        ("Recruiting & Hiring: Highlights potential bias in recruiting and hiring talent", "bold"),
-        ("Performance & Reward: Looks at equity in relation to this area of rewarding the team", "bold"),
-        ("Culture & Engagement: Your actions and attitudes related to organisational culture", "bold"),
-        ("Exit & Retention: Actions related to retaining and understanding the reasons for talent drain", "bold")
+        ("Development: Spans actions in the area of developing talent/your team", "bold_pre"),
+        ("General: Covers general work related attitudes and actions", "bold_pre"),
+        ("Recruiting & Hiring: Highlights potential bias in recruiting and hiring talent", "bold_pre"),
+        ("Performance & Reward: Looks at equity in relation to this area of rewarding the team", "bold_pre"),
+        ("Culture & Engagement: Your actions and attitudes related to organisational culture", "bold_pre"),
+        ("Exit & Retention: Actions related to retaining and understanding the reasons for talent drain", "bold_pre")
     ]
 
     for explanation, style in explanations:
         if style == "bold":
             c.setFont("Helvetica-Bold", 10)
+        elif style == "bold_pre":
+            c.setFont("Helvetica-Bold", 10)
+            text, remainder = explanation.split(":", 1)
+            lines = wrap_text(text + ":", c, width - 2 * margin, 10)
+            for line in lines:
+                if y - 15 < margin:
+                    c.showPage()
+                    y = height - margin
+                c.drawString(margin, y, line)
+                y -= 12
+            c.setFont("Helvetica", 10)
+            lines = wrap_text(remainder.strip(), c, width - 2 * margin, 10)
         else:
             c.setFont("Helvetica", 10)
-        lines = wrap_text(explanation, c, width - 2 * margin, 10)
+            lines = wrap_text(explanation, c, width - 2 * margin, 10)
         for line in lines:
             if y - 15 < margin:
                 c.showPage()
