@@ -254,10 +254,11 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     for explanation, style in explanations:
         if style == "bold":
             c.setFont("Helvetica-Bold", 10)
+            lines = wrap_text(explanation, c, width - 2 * margin, 10)
         elif style == "bold_pre":
-            c.setFont("Helvetica-Bold", 10)
             text, remainder = explanation.split(":", 1)
             lines = wrap_text(text + ":", c, width - 2 * margin, 10)
+            c.setFont("Helvetica-Bold", 10)
             for line in lines:
                 if y - 15 < margin:
                     c.showPage()
@@ -269,6 +270,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         else:
             c.setFont("Helvetica", 10)
             lines = wrap_text(explanation, c, width - 2 * margin, 10)
+
         for line in lines:
             if y - 15 < margin:
                 c.showPage()
