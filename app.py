@@ -198,13 +198,14 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
     margin = 50
+    y = height - 50
 
     c.setFont("Helvetica-Bold", 16)
-    c.drawString(margin, height - 40, "Anti-Bias Self Assessment Tool")
+    c.drawString(margin, y, "Anti-Bias Self Assessment Tool")
+    y -= 30
     c.setFont("Helvetica", 12)
-    c.drawString(margin, height - 60, "Your results:")
-
-    y = height - 80
+    c.drawString(margin, y, "Your results:")
+    y -= 30
 
     for category_name, score in total_scores_per_category.items():
         max_score = max_scores_per_category[category_name]
@@ -212,9 +213,11 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         line = f"{category_name}: {score} out of {max_score} ({progress}%)"
         if y - 20 < margin:
             c.showPage()
-            y = height - 40
+            y = height - 50
         c.drawString(margin, y, line)
         y -= 20
+
+    y -= 20  # Extra space before explanations
 
     # Add explanations with bold headers
     explanations = [
@@ -244,7 +247,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         for line in lines:
             if y - 20 < margin:
                 c.showPage()
-                y = height - 40
+                y = height - 50
             c.drawString(margin, y, line)
             y -= 20
         y -= 10  # Add extra space between sections
@@ -254,14 +257,14 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
 
     chart_index = 0
     for page in range(3):
-        y = height - 40
+        y = height - 50
         for _ in range(charts_per_page):
             if chart_index >= len(chart_images):
                 break
             img = chart_images[chart_index]
-            if y - 300 < margin:
+            if y - 320 < margin:
                 c.showPage()
-                y = height - 40
+                y = height - 50
             c.drawImage(ImageReader(img), margin, y - 300, width=width - 2 * margin, height=300)
             y -= 320
             chart_index += 1
