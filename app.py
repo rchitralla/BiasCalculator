@@ -3,7 +3,9 @@ import pandas as pd
 import random
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
 from io import BytesIO
+import matplotlib.pyplot as plt
 
 # Path to the logo image
 logo_path = "Logo.png"
@@ -160,18 +162,27 @@ def custom_progress_bar(percentage, color="#377bff"):
 # Function to create custom stacked bar chart
 def custom_stacked_bar_chart(scores_data):
     st.markdown("<h3>Self Assessment Scores by Category and Type (Stacked)</h3>", unsafe_allow_html=True)
+    chart_images = []
     for category in scores_data["Category"].unique():
         st.markdown(f"### {category}", unsafe_allow_html=True)
         category_data = scores_data[scores_data["Category"] == category]
-        bar_html = '<div style="width: 100%; background-color: #e0e0e0; border-radius: 5px; display: flex; align-items: center;">'
-        for _, row in category_data.iterrows():
-            percentage = row["Percentage"]
-            bar_html += f'<div style="width: {percentage}%; background-color: #377bff; padding: 5px; color: white; text-align: center; border-radius: 5px;">{row["Type"]} ({percentage:.2f}%)</div>'
-        bar_html += '</div>'
-        st.markdown(bar_html, unsafe_allow_html=True)
+        
+        fig, ax = plt.subplots(figsize=(8, 1))
+        ax.barh(category_data["Type"], category_data["Percentage"], color='#377bff')
+        ax.set_xlim(0, 100)
+        ax.set_xlabel('Percentage')
+        ax.set_title(category)
+        plt.tight_layout()
+        
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        chart_images.append(buf)
+        st.image(buf)
+    return chart_images
 
 # Function to generate PDF
-def generate_pdf(total_scores_per_category, max_scores_per_category):
+def generate_pdf(total_scores_per_category, max_scores_per_category, chart_images):
     buffer = BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
@@ -186,7 +197,35 @@ def generate_pdf(total_scores_per_category, max_scores_per_category):
         c.drawString(100, y, f"{category_name}: {score} out of {max_score} ({progress}%)")
         y -= 20
 
+    # Add explanations
+    explanations = [
+        "How to interpret the results",
+        "The questions answered fall under the individual, company, and industry related actions and choices you make every day at work.",
+        "They address key areas from hiring through developing and retaining talent that we as company leaders make in relation to our peers, team members, superiors, and creating a broader impact on the industry.",
+        "Take a look at the scores below and see:",
+        "- Where do you score highest?",
+        "- Which area has the highest potential to improve?",
+        "- Is there anything that surprised you?",
+        "- What are some of the actions that you can take to reduce bias and drive inclusion?",
+        "Capture your reflection for a later conversation.",
+        "Development: Spans actions in the area of developing talent/your team",
+        "General: Covers general work related attitudes and actions",
+        "Recruiting & Hiring: Highlights potential bias in recruiting and hiring talent",
+        "Performance & Reward: Looks at equity in relation to this area of rewarding the team",
+        "Culture & Engagement: Your actions and attitudes related to organisational culture",
+        "Exit & Retention: Actions related to retaining and understanding the reasons for talent drain"
+    ]
+    for explanation in explanations:
+        y -= 20
+        c.drawString(100, y, explanation)
+    
     c.showPage()
+
+    # Embed charts into the PDF
+    for img in chart_images:
+        c.drawImage(ImageReader(img), 100, height - 200, width=400, height=200)
+        c.showPage()
+
     c.save()
     buffer.seek(0)
 
@@ -285,10 +324,10 @@ def main():
         scores_data = scores_data.sort_values(by=["Category", "Percentage"], ascending=[True, False])
 
         # Create a custom horizontal stacked bar chart for scores (percentage)
-        custom_stacked_bar_chart(scores_data)
+        chart_images = custom_stacked_bar_chart(scores_data)
 
         # Generate and provide download link for PDF
-        pdf_buffer = generate_pdf(total_scores_per_category, max_scores_per_category)
+        pdf_buffer = generate_pdf(total_scores_per_category, max_scores_per_category, chart_images)
         st.download_button(
             label="Download PDF of Results",
             data=pdf_buffer,
