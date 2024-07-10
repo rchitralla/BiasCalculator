@@ -36,7 +36,7 @@ categories = {
             "Every new member of my direct team takes inclusion/unconscious bias training when they start in a new role"
         ],
         "Institution Actions": [
-            "My function has institutionalised a balanced slate policy",
+            "My function has institutionalised a balanced slate policy. (A balanced or diverse slate ensures that shortlisted candidates for a position come from a variety of backgrounds, identities and experiences)",
             "My function requires structured interviews or diverse interview panels for all open roles",
             "My function has embedded inclusion/unconscious bias training into new hire onboarding"
         ]
