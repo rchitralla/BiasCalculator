@@ -170,8 +170,9 @@ def custom_stacked_bar_chart(scores_data):
         fig, ax = plt.subplots(figsize=(10, 3))
         ax.barh(category_data["Type"], category_data["Percentage"], color='#377bff')
         ax.set_xlim(0, 100)
-        ax.set_xlabel('Percentage')
-        ax.set_title(category)
+        ax.set_xlabel('Percentage', fontsize=12)
+        ax.set_title(category, fontsize=14)
+        ax.tick_params(axis='both', which='major', labelsize=10)
         plt.tight_layout()
         
         buf = BytesIO()
