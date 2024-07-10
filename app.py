@@ -204,9 +204,9 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     try:
         logo = ImageReader(logo_path)
         logo_width, logo_height = logo.getSize()
-        aspect ratio = logo_height / logo_width
+        aspect_ratio = logo_height / logo_width
         logo_display_width = 100
-        logo_display_height = logo_display_width * aspect ratio
+        logo_display_height = logo_display_width * aspect_ratio
         c.drawImage(logo, margin, y - logo_display_height, width=logo_display_width, height=logo_display_height)
         y -= (logo_display_height + 30)
     except Exception as e:
@@ -266,12 +266,12 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         y -= 10  # Add extra space between sections
 
     # Embed charts into the PDF, spread across up to 3 pages
-    charts_per page = max(1, (len(chart_images) + 2) // 3)  # +2 ensures at least 1 chart on each page
+    charts_per_page = max(1, (len(chart_images) + 2) // 3)  # +2 ensures at least 1 chart on each page
 
     chart_index = 0
     for page in range(3):
         y = height - 50
-        for _ in range(charts_per page):
+        for _ in range(charts_per_page):
             if chart_index >= len(chart_images):
                 break
             img = chart_images[chart_index]
