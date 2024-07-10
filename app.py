@@ -250,7 +250,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         y -= 10  # Add extra space between sections
 
     # Embed charts into the PDF, spread across up to 3 pages
-    charts_per_page = max(1, len(chart_images) // 3)
+    charts_per_page = max(1, (len(chart_images) + 2) // 3)  # +2 ensures at least 1 chart on each page
 
     chart_index = 0
     for page in range(3):
@@ -259,7 +259,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
             if chart_index >= len(chart_images):
                 break
             img = chart_images[chart_index]
-            if y - 320 < margin:
+            if y - 300 < margin:
                 c.showPage()
                 y = height - 40
             c.drawImage(ImageReader(img), margin, y - 300, width=width - 2 * margin, height=300)
