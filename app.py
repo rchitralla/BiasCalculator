@@ -167,7 +167,7 @@ def custom_stacked_bar_chart(scores_data):
         st.markdown(f"### {category}", unsafe_allow_html=True)
         category_data = scores_data[scores_data["Category"] == category]
         
-        fig, ax = plt.subplots(figsize=(10, 2))  # Adjusted height for better visualisation
+        fig, ax = plt.subplots(figsize=(10, 3))
         ax.barh(category_data["Type"], category_data["Percentage"], color='#377bff')
         ax.set_xlim(0, 100)
         ax.set_xlabel('Percentage', fontsize=12)
@@ -242,6 +242,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         ("- Which area has the highest potential to improve?", "normal"),
         ("- Is there anything that surprised you?", "normal"),
         ("- What are some of the actions that you can take to reduce bias and drive inclusion?", "normal"),
+        ("", "normal"),  # Add a blank line for more space
         ("Capture your reflection for a later conversation.", "normal"),
         ("Development: Spans actions in the area of developing talent/your team", "bold_pre"),
         ("General: Covers general work related attitudes and actions", "bold_pre"),
@@ -359,6 +360,7 @@ def main():
             "- Which area has the highest potential to improve?\n"
             "- Is there anything that surprised you?\n"
             "- What are some of the actions that you can take to reduce bias and drive inclusion?\n"
+            "\n"
             "Capture your reflection for a later conversation."
         )
         st.write("#### Development")
