@@ -183,21 +183,38 @@ def custom_stacked_bar_chart(scores_data):
     return chart_images
 
 # Function to generate PDF
+
+def wrap_text(text, canvas, max_width):
+    lines = []
+    words = text.split()
+    while words:
+        line = ''
+        while words and canvas.stringWidth(line + words[0] + ' ', "Helvetica", 12) <= max_width:
+            line += words.pop(0) + ' '
+        lines.append(line.strip())
+    return lines
+
 def generate_pdf(total_scores_per_category, max_scores_per_category, chart_images):
     buffer = BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
+    margin = 50
 
     c.setFont("Helvetica-Bold", 16)
-    c.drawString(100, height - 40, "Anti-Bias Self Assessment Tool")
+    c.drawString(margin, height - 40, "Anti-Bias Self Assessment Tool")
     c.setFont("Helvetica", 12)
-    c.drawString(100, height - 60, "Your results:")
+    c.drawString(margin, height - 60, "Your results:")
 
     y = height - 80
+
     for category_name, score in total_scores_per_category.items():
         max_score = max_scores_per_category[category_name]
         progress = int((score / max_score) * 100)
-        c.drawString(100, y, f"{category_name}: {score} out of {max_score} ({progress}%)")
+        line = f"{category_name}: {score} out of {max_score} ({progress}%)"
+        if y - 20 < margin:
+            c.showPage()
+            y = height - 40
+        c.drawString(margin, y, line)
         y -= 20
 
     # Add explanations
@@ -218,15 +235,25 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         "Culture & Engagement: Your actions and attitudes related to organisational culture",
         "Exit & Retention: Actions related to retaining and understanding the reasons for talent drain"
     ]
+
     for explanation in explanations:
-        y -= 20
-        c.drawString(100, y, explanation)
+        lines = wrap_text(explanation, c, width - 2 * margin)
+        for line in lines:
+            if y - 20 < margin:
+                c.showPage()
+                y = height - 40
+            c.drawString(margin, y, line)
+            y -= 20
     
     c.showPage()
 
     # Embed charts into the PDF
     for img in chart_images:
-        c.drawImage(ImageReader(img), 100, height - 500, width=400, height=300)
+        if y - 320 < margin:
+            c.showPage()
+            y = height - 40
+        c.drawImage(ImageReader(img), margin, y - 300, width=width - 2 * margin, height=300)
+        y -= 320
         c.showPage()
 
     c.save()
