@@ -161,7 +161,7 @@ def custom_progress_bar(percentage, color="#377bff"):
 
 # Function to create custom stacked bar chart
 def custom_stacked_bar_chart(scores_data):
-    st.markdown("<h3>Self Assessment Scores by Category and Type (Stacked)</h3>", unsafe_allow_html=True)
+    st.markdown("<h3>Self Assessment Scores by Category and Type</h3>", unsafe_allow_html=True)
     chart_images = []
     for category in scores_data["Category"].unique():
         st.markdown(f"### {category}", unsafe_allow_html=True)
