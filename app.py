@@ -167,7 +167,7 @@ def custom_stacked_bar_chart(scores_data):
         st.markdown(f"### {category}", unsafe_allow_html=True)
         category_data = scores_data[scores_data["Category"] == category]
         
-        fig, ax = plt.subplots(figsize=(10, 3))
+        fig, ax = plt.subplots(figsize=(10, 4))  # Increase the height for better readability
         ax.barh(category_data["Type"], category_data["Percentage"], color='#377bff')
         ax.set_xlim(0, 100)
         ax.set_xlabel('Percentage', fontsize=12)
@@ -284,7 +284,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     c.showPage()
 
     # Embed charts into the PDF, spread across up to 3 pages
-    charts_per_page = max(1, (len(chart_images) + 2) // 3)  # +2 ensures at least 1 chart on each page
+    charts_per_page = 2  # Reduced number of charts per page for better readability
 
     chart_index = 0
     for page in range(3):
