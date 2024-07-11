@@ -159,14 +159,15 @@ def custom_progress_bar(percentage, color="#377bff"):
         unsafe_allow_html=True
     )
 
-# Function to create custom stacked bar chart
-def custom_stacked_bar_chart(scores_data):
+# Function to create custom bar chart
+def custom_bar_chart(scores_data):
     st.markdown("<h3>Self Assessment Scores by Category and Type</h3>", unsafe_allow_html=True)
     chart_images = []
     for category in scores_data["Category"].unique():
         st.markdown(f"### {category}", unsafe_allow_html=True)
         category_data = scores_data[scores_data["Category"] == category]
-        
+        category_data = category_data.sort_values(by=["Type"], ascending=[False])  # Ensure consistent order
+
         fig, ax = plt.subplots(figsize=(10, 4))  # Increase the height for better readability
         ax.barh(category_data["Type"], category_data["Percentage"], color='#377bff')
         ax.set_xlim(0, 100)
@@ -399,10 +400,10 @@ def main():
         # Sort the scores_data based on the ordered categories
         ordered_categories = scores_data["Category"].unique()
         scores_data["Category"] = pd.Categorical(scores_data["Category"], categories=ordered_categories, ordered=True)
-        scores_data = scores_data.sort_values(by=["Category", "Percentage"], ascending=[True, False])
+        scores_data = scores_data.sort_values(by=["Category", "Type"], ascending=[True, False])  # Ensure consistent order
 
-        # Create a custom horizontal stacked bar chart for scores (percentage)
-        chart_images = custom_stacked_bar_chart(scores_data)
+        # Create a custom horizontal bar chart for scores (percentage)
+        chart_images = custom_bar_chart(scores_data)
 
         # Generate and provide download link for PDF
         pdf_buffer = generate_pdf(total_scores_per_category, max_scores_per_category, chart_images)
