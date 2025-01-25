@@ -413,6 +413,18 @@ def main():
             file_name="assessment_results.pdf",
             mime="application/pdf"
         )
+         # Smaller credit text and visitor counter at the bottom
+    st.markdown(
+        f"""
+        <div style='text-align: center; margin-top: 50px; font-size: 12px;'>
+            Created by Regina Chitralla
+        </div>
+        <div style='text-align: center; font-size: 12px;'>
+            Unique Page Visits: {st.session_state.unique_visits}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 if __name__ == "__main__":
     main()
