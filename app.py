@@ -108,7 +108,9 @@ def display_questions():
             st.session_state[key] = 1
 
         selected_option = st.selectbox(
-            "Select your response:", options, index=options.index(st.session_state[key]) if st.session_state[key] in options else 0,
+            "Select your response:",
+            options,
+            index=options.index(st.session_state[key]) if st.session_state[key] in options else 0,
             key=key
         )
 
@@ -183,7 +185,7 @@ def custom_bar_chart(scores_data):
         st.image(buf)
     return chart_images
 
-# Function to generate PDF
+# Function to wrap text for the PDF
 def wrap_text(text, canvas, max_width, font_size):
     lines = []
     words = text.split()
@@ -194,6 +196,7 @@ def wrap_text(text, canvas, max_width, font_size):
         lines.append(line.strip())
     return lines
 
+# Function to generate PDF
 def generate_pdf(total_scores_per_category, max_scores_per_category, chart_images):
     buffer = BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
@@ -285,7 +288,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     c.showPage()
 
     # Embed charts into the PDF, spread across up to 3 pages
-    charts_per_page = 2  # Reduced number of charts per page for better readability
+    charts_per_page = 2  # Adjust as desired for better readability
 
     chart_index = 0
     for page in range(3):
@@ -309,8 +312,12 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
 
     return buffer
 
-# Main function to display the self-assessment form
 def main():
+    # --- Initialize or update your unique visits counter in session state ---
+    if 'unique_visits' not in st.session_state:
+        st.session_state.unique_visits = 0
+    st.session_state.unique_visits += 1
+    
     try:
         st.image(logo_path, width=200)  # Add your logo at the top
     except Exception as e:
@@ -346,14 +353,14 @@ def main():
     # Calculate the maximum possible scores per category
     max_scores_per_category = calculate_max_scores_per_category(categories)
 
-    # Display the results and visualisations
     if st.button("Submit"):
         st.write("## Assessment Complete. Here are your results:")
 
         st.write("### How to interpret the results")
         st.write(
             "The questions answered fall under the individual, company, and industry related actions and choices you make every day at work. "
-            "They address key areas from hiring through developing and retaining talent that we as company leaders make in relation to our peers, team members, superiors, and creating a broader impact on the industry."
+            "They address key areas from hiring through developing and retaining talent that we as company leaders make in relation to our peers, "
+            "team members, superiors, and creating a broader impact on the industry."
         )
         st.write(
             "Take a look at the scores below and see:\n"
@@ -386,21 +393,33 @@ def main():
             progress = int((score / max_score) * 100)
             custom_progress_bar(progress)
 
-        # Prepare data for visualisation
+        # Prepare data for visualization
         flattened_scores = []
         for category_name, types in categories.items():
             for type_name, questions in types.items():
-                response_scores = [response['score'] for response in responses if (response['category'] == category_name) and (response['type'] == type_name) and (type(response['score']) == int)]
+                response_scores = [
+                    r['score'] for r in responses
+                    if r['category'] == category_name and r['type'] == type_name and type(r['score']) == int
+                ]
                 score = sum(response_scores)
                 max_score = len(questions) * 5
                 percentage = (score / max_score) * 100
-                flattened_scores.append({"Category": category_name, "Type": type_name, "Score": score, "Percentage": percentage})
-        scores_data = pd.DataFrame(flattened_scores)
+                flattened_scores.append({
+                    "Category": category_name,
+                    "Type": type_name,
+                    "Score": score,
+                    "Percentage": percentage
+                })
 
+        scores_data = pd.DataFrame(flattened_scores)
         # Sort the scores_data based on the ordered categories
         ordered_categories = scores_data["Category"].unique()
-        scores_data["Category"] = pd.Categorical(scores_data["Category"], categories=ordered_categories, ordered=True)
-        scores_data = scores_data.sort_values(by=["Category", "Type"], ascending=[True, False])  # Ensure consistent order
+        scores_data["Category"] = pd.Categorical(
+            scores_data["Category"],
+            categories=ordered_categories,
+            ordered=True
+        )
+        scores_data = scores_data.sort_values(by=["Category", "Type"], ascending=[True, False])
 
         # Create a custom horizontal bar chart for scores (percentage)
         chart_images = custom_bar_chart(scores_data)
@@ -413,7 +432,8 @@ def main():
             file_name="assessment_results.pdf",
             mime="application/pdf"
         )
-         # Smaller credit text and visitor counter at the bottom
+
+    # Smaller credit text and visitor counter at the bottom
     st.markdown(
         f"""
         <div style='text-align: center; margin-top: 50px; font-size: 12px;'>
