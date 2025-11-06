@@ -177,12 +177,13 @@ def custom_bar_chart(scores_data):
         ax.set_title(category, fontsize=14)
         ax.tick_params(axis='both', which='major', labelsize=10)
         plt.tight_layout()
-        
+
         buf = BytesIO()
         plt.savefig(buf, format='png', dpi=300)  # Increase DPI for better resolution
         buf.seek(0)
         chart_images.append(buf)
         st.image(buf)
+        plt.close(fig)  # Close the figure to free memory
     return chart_images
 
 # Function to wrap text for the PDF
