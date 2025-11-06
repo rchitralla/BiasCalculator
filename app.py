@@ -111,7 +111,8 @@ def display_questions():
             "Select your response:",
             options,
             index=options.index(st.session_state[key]) if st.session_state[key] in options else 0,
-            key=key
+            key=key,
+            label_visibility="collapsed"  # Hide redundant labels for faster rendering
         )
 
         responses.append({
@@ -141,9 +142,10 @@ def calculate_total_scores_per_category(responses):
     return total_scores_per_category
 
 # Function to calculate the maximum possible score per category
-def calculate_max_scores_per_category(categories):
+@st.cache_data
+def calculate_max_scores_per_category(categories_dict):
     max_scores_per_category = {}
-    for category_name, types in categories.items():
+    for category_name, types in categories_dict.items():
         total_questions = sum(len(questions) for questions in types.values())
         max_scores_per_category[category_name] = total_questions * 5  # Maximum score is 5 per question
     return max_scores_per_category
@@ -314,10 +316,12 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     return buffer
 
 def main():
-    # --- Initialize or update your unique visits counter in session state ---
+    # --- Initialize unique visits counter once per session ---
     if 'unique_visits' not in st.session_state:
         st.session_state.unique_visits = 0
-    st.session_state.unique_visits += 1
+    if 'visit_counted' not in st.session_state:
+        st.session_state.unique_visits += 1
+        st.session_state.visit_counted = True
     
     try:
         st.image(logo_path, width=200)  # Add your logo at the top
@@ -345,16 +349,11 @@ def main():
     # Display the questions and collect responses
     responses = display_questions()
 
-    # Calculate the total score
-    total_score = calculate_total_score(responses)
-
-    # Calculate the total scores per category
-    total_scores_per_category = calculate_total_scores_per_category(responses)
-
-    # Calculate the maximum possible scores per category
-    max_scores_per_category = calculate_max_scores_per_category(categories)
-
     if st.button("Submit"):
+        # Calculate scores only when submit is pressed
+        total_score = calculate_total_score(responses)
+        total_scores_per_category = calculate_total_scores_per_category(responses)
+        max_scores_per_category = calculate_max_scores_per_category(categories)
         st.write("## Assessment Complete. Here are your results:")
 
         st.write("### How to interpret the results")
