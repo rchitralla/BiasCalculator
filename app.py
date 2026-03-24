@@ -183,6 +183,7 @@ def custom_bar_chart(scores_data):
         buf.seek(0)
         chart_images.append(buf)
         st.image(buf)
+        buf.seek(0)  # Reset position so the buffer can be read again for PDF generation
         plt.close(fig)  # Close the figure to free memory
     return chart_images
 
@@ -194,6 +195,9 @@ def wrap_text(text, canvas, max_width, font_size):
         line = ''
         while words and canvas.stringWidth(line + words[0] + ' ', "Helvetica", font_size) <= max_width:
             line += words.pop(0) + ' '
+        if not line:
+            # Word is too long to fit; force it onto the line to avoid infinite loop
+            line = words.pop(0)
         lines.append(line.strip())
     return lines
 
@@ -298,6 +302,7 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
             if chart_index >= len(chart_images):
                 break
             img = chart_images[chart_index]
+            img.seek(0)  # Ensure buffer is at the start before reading
             if y - 320 < margin:
                 c.showPage()
                 y = height - 50
@@ -314,10 +319,10 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     return buffer
 
 def main():
-    # --- Initialize or update your unique visits counter in session state ---
+    # --- Initialize unique visits counter (only increments once per session) ---
     if 'unique_visits' not in st.session_state:
-        st.session_state.unique_visits = 0
-    st.session_state.unique_visits += 1
+        st.session_state.unique_visits = 1
+        st.session_state.visit_counted = True
     
     try:
         st.image(logo_path, width=200)  # Add your logo at the top
@@ -400,7 +405,7 @@ def main():
             for type_name, questions in types.items():
                 response_scores = [
                     r['score'] for r in responses
-                    if r['category'] == category_name and r['type'] == type_name and type(r['score']) == int
+                    if r['category'] == category_name and r['type'] == type_name and isinstance(r['score'], int)
                 ]
                 score = sum(response_scores)
                 max_score = len(questions) * 5
