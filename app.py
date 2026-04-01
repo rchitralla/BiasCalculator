@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 # Path to the logo image
 logo_path = "Logo.png"
 
+# Module-level visit counter (persists across Streamlit reruns within the same server process)
+_visit_counter = {'count': 0}
+
 # Define the categories, types, and questions
 categories = {
     "General": {
@@ -74,7 +77,7 @@ categories = {
             "I visibly support the public publication of pay equity results and our plans to mitigate any gaps"
         ]
     },
-    "Exit & Retain": {
+    "Exit & Retention": {
         "Individual Actions": [
             "I personally and intentionally speak to critical employees from all different backgrounds to explore exit and stay reasons"
         ],
@@ -181,9 +184,9 @@ def custom_bar_chart(scores_data):
         buf = BytesIO()
         plt.savefig(buf, format='png', dpi=300)  # Increase DPI for better resolution
         buf.seek(0)
-        chart_images.append(buf)
         st.image(buf)
         buf.seek(0)  # Reset position so the buffer can be read again for PDF generation
+        chart_images.append(buf)
         plt.close(fig)  # Close the figure to free memory
     return chart_images
 
@@ -218,9 +221,8 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
         logo_display_height = logo_display_width * aspect_ratio
         c.drawImage(logo, margin, y - logo_display_height, width=logo_display_width, height=logo_display_height)
         y -= (logo_display_height + 20)
-    except Exception as e:
+    except Exception:
         st.error("Logo image not found or could not be loaded.")
-        st.write(e)
 
     c.setFont("Helvetica-Bold", 12)
     c.drawString(margin, y, "LEAD Network Anti-Bias Self Assessment Tool")
@@ -319,16 +321,16 @@ def generate_pdf(total_scores_per_category, max_scores_per_category, chart_image
     return buffer
 
 def main():
-    # --- Initialize unique visits counter (only increments once per session) ---
-    if 'unique_visits' not in st.session_state:
-        st.session_state.unique_visits = 1
+    # --- Track session count using a module-level counter ---
+    if 'visit_counted' not in st.session_state:
+        _visit_counter['count'] += 1
         st.session_state.visit_counted = True
+    st.session_state.unique_visits = _visit_counter['count']
     
     try:
         st.image(logo_path, width=200)  # Add your logo at the top
-    except Exception as e:
+    except Exception:
         st.error("Logo image not found. Please check the path to the logo image.")
-        st.write(e)
         
     st.title("Anti-Bias Self Assessment Tool")
     st.write(
